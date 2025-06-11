@@ -9,5 +9,6 @@ public class MemberController {
         System.out.println("sh branch");
         System.out.println("문세인");
         System.out.println("kyh branch");
+        System.out.println("good branch");
     }
 }

@@ -11,5 +11,6 @@ public class MemberController {
         System.out.println("kjw branch");
         System.out.println("SI branch");
         System.out.println("kyh branch");
+        System.out.println("테스트");
     }
 }

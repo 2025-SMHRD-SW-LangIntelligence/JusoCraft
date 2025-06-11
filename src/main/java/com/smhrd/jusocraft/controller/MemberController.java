@@ -15,5 +15,6 @@ public class MemberController {
         System.out.println("merge테스트");
         System.out.println("이게 맞는지");
         System.out.println("세인2");
+        System.out.println("브렌치 테스트");
     }
 }

@@ -12,5 +12,6 @@ public class MemberController {
         System.out.println("SI branch");
         System.out.println("kyh branch");
         System.out.println("테스트");
+        System.out.println("merge테스트");
     }
 }

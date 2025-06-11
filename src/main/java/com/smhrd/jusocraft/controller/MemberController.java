@@ -11,9 +11,11 @@ public class MemberController {
         System.out.println("kjw branch");
         System.out.println("SI branch");
         System.out.println("kyh branch");
+        System.out.println("good branch");
         System.out.println("테스트");
         System.out.println("merge테스트");
         System.out.println("이게 맞는지");
         System.out.println("세인2");
+        System.out.println("브렌치 테스트");
     }
 }

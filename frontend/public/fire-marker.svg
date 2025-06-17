@@ -1,0 +1,25 @@
+<svg width="122" height="154" viewBox="0 0 122 154" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g filter="url(#filter0_f_2817_42)">
+<ellipse cx="61" cy="143.786" rx="20.3333" ry="7.2619" fill="black" fill-opacity="0.2"/>
+</g>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M61 0C94.6894 0 122 27.3106 122 61C122 86.8308 105.945 108.912 83.2689 117.808L64.4744 143.497C64.0826 144.035 63.5623 144.474 62.9576 144.777C62.3529 145.08 61.6815 145.238 61 145.238C60.3186 145.238 59.6471 145.08 59.0424 144.777C58.4377 144.474 57.9174 144.035 57.5256 143.497L38.7311 117.807C16.0554 108.912 0 86.8308 0 61C0 27.3106 27.3106 0 61 0Z" fill="url(#paint0_linear_2817_42)"/>
+<g opacity="0.2">
+<path d="M55.0384 96.9998C55.0384 96.9998 31.0604 93.4513 31.0604 73.0218C31.0604 52.5922 62.4145 50.6426 55.4758 25.2971C55.4758 25.2971 78.9522 32.6434 73.2212 55.5197C73.2212 55.5197 76.3248 53.5372 78.7014 49.6782C78.7014 49.6782 90.5889 58.8607 90.5889 72.8337C90.5889 86.8067 74.1095 97.0864 66.3034 96.9909C66.3034 96.9909 74.726 85.6184 67.0632 78.2871C56.1864 67.879 60.8232 61.1955 60.8232 61.1955C60.8232 61.1955 34.3192 74.1608 55.0384 96.9998Z" fill="#231F20"/>
+</g>
+<path d="M55.0384 94.0145C55.0384 94.0145 31.0604 90.466 31.0604 70.0364C31.0604 49.6069 62.413 47.6572 55.4743 22.3118C55.4743 22.3118 78.9508 29.658 73.2197 52.5344C73.2197 52.5344 76.3233 50.5519 78.6999 46.6929C78.6999 46.6929 90.5875 55.8753 90.5875 69.8483C90.5875 83.8214 74.1095 94.1011 66.3034 94.0055C66.3034 94.0055 74.726 82.6331 67.0632 75.3017C56.1864 64.8936 60.8232 58.2101 60.8232 58.2101C60.8232 58.2101 34.3192 71.1755 55.0384 94.0145Z" fill="url(#paint1_linear_2817_42)"/>
+<defs>
+<filter id="filter0_f_2817_42" x="38.6667" y="134.524" width="44.6667" height="18.5238" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feGaussianBlur stdDeviation="1" result="effect1_foregroundBlur_2817_42"/>
+</filter>
+<linearGradient id="paint0_linear_2817_42" x1="61" y1="0" x2="61" y2="145.238" gradientUnits="userSpaceOnUse">
+<stop stop-color="#FF9A6E"/>
+<stop offset="1" stop-color="#E50031"/>
+</linearGradient>
+<linearGradient id="paint1_linear_2817_42" x1="60.8239" y1="22.3118" x2="60.8239" y2="94.0145" gradientUnits="userSpaceOnUse">
+<stop stop-color="#FEA95E"/>
+<stop offset="0.461538" stop-color="#FFEF79"/>
+</linearGradient>
+</defs>
+</svg>

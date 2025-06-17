@@ -13,7 +13,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class WaterStorage {
+public class WaterStorageEntity {
 
     @Id
     private Long id;

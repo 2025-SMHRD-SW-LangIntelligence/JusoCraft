@@ -46,10 +46,10 @@ public class HydrantDataLoader {
             } 
 
             hydrantRepository.saveAll(hydrants);
-            System.out.println("✅ 소화전 데이터가 DB에 성공적으로 저장되었습니다. 총 개수: " + hydrants.size());
+            System.out.println("소화전 데이터가 DB에 성공적으로 저장되었습니다. 총 개수: " + hydrants.size());
 
         } catch (Exception e) {
-            System.err.println("❌ 소화전 데이터 로드 실패:");
+            System.err.println("소화전 데이터 로드 실패:");
             e.printStackTrace();
         }
     }

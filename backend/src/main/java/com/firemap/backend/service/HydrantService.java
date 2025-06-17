@@ -28,6 +28,7 @@ public class HydrantService {
                 .lng(dto.getLng())
                 .address(dto.getAddress())
                 .pressure(dto.getPressure())
+                .detailLocation(dto.getDetailLocation())
                 .build();
 
         HydrantEntity saved = hydrantRepository.save(entity);
@@ -46,6 +47,7 @@ public class HydrantService {
                         entity.getLat(),
                         entity.getLng(),
                         entity.getAddress(),
+                        entity.getDetailLocation(),
                         entity.getPressure()
                 ))
                 .collect(Collectors.toList());

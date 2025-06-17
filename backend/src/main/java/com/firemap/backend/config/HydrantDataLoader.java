@@ -29,7 +29,7 @@ public class HydrantDataLoader {
             List<HydrantEntity> hydrants = new ArrayList<>();
 
             while ((line = br.readLine()) != null) {
-                String[] fields = line.split(",");
+                String[] fields = line.split(",", -1);
 
                 HydrantEntity hydrant = HydrantEntity.builder()
                         .facilityNumber(fields[0].trim())
@@ -38,11 +38,12 @@ public class HydrantDataLoader {
                         .lat(Double.parseDouble(fields[3].trim()))
                         .lng(Double.parseDouble(fields[4].trim()))
                         .address(fields[5].trim())
-                        .pressure(fields.length > 6 && !fields[6].trim().isEmpty() ? Double.valueOf(fields[6].trim()) : null)
+                        .detailLocation(fields[6].trim())
+                        .pressure(fields.length > 6 && !fields[7].trim().isEmpty() ? Double.valueOf(fields[7].trim()) : null)
                         .build();
 
                 hydrants.add(hydrant);
-            }
+            } 
 
             hydrantRepository.saveAll(hydrants);
             System.out.println("✅ 소화전 데이터가 DB에 성공적으로 저장되었습니다. 총 개수: " + hydrants.size());

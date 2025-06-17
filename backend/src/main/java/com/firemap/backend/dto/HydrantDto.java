@@ -13,5 +13,6 @@ public class HydrantDto {
     private double lat;
     private double lng;
     private String address;
+    private String detailLocation;
     private Double pressure;
 }

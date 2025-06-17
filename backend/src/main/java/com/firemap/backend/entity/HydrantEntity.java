@@ -34,6 +34,9 @@ public class HydrantEntity {
     @Column(name = "address") // 주소 (도로명 또는 지번주소)
     private String address;
 
+    @Column(name = "detailLocation") // 상세주소
+    private String detailLocation;
+
     @Column(name = "pressure") // 출수압력
     private Double pressure;
 }

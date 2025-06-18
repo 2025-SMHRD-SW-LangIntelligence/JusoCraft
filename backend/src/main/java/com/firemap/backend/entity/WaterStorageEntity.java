@@ -16,8 +16,8 @@ public class WaterStorageEntity {
     @Id
     private Long id;
 
-    @Column(nullable = false, length = 30)
-    private String usage;
+    @Column(nullable = false, length = 30, name = "water_usage")
+    private String waterUsage;
 
     @Column(nullable = false, length = 100)
     private String name;

@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class WaterStorageDto {
     private Long id;
-    private String usage;
+    private String waterUsage;
     private String name;
     private double width;
     private double length;

@@ -21,7 +21,7 @@ public class WaterStorageService {
     @Transactional
     public WaterStorageDto saveWaterStorage(WaterStorageDto dto) {
         WaterStorageEntity entity = WaterStorageEntity.builder()
-                .usage(dto.getUsage())
+                .waterUsage(dto.getWaterUsage())
                 .name(dto.getName())
                 .width(dto.getWidth())
                 .length(dto.getLength())
@@ -38,7 +38,7 @@ public class WaterStorageService {
         return waterStorageRepository.findAll().stream()
                 .map(entity -> new WaterStorageDto(
                         entity.getId(),
-                        entity.getUsage(),
+                        entity.getWaterUsage(),
                         entity.getName(),
                         entity.getWidth(),
                         entity.getLength(),

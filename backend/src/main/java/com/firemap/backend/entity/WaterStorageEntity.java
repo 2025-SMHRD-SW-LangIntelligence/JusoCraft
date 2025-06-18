@@ -1,8 +1,6 @@
 package com.firemap.backend.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
@@ -11,9 +9,11 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
+@Table(name = "water_storages")
 public class WaterStorageEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false, length = 30, name = "water_usage")

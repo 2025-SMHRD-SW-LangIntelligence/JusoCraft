@@ -185,15 +185,14 @@ export default function useFireDispatch(
                 );
 
                 /* ---------- 소화전 마커 ---------- */
-                const nearbyHydrants = hydrants.filter((h) => {
-                    const dist = getDistance(
-                        report.fireLat,
-                        report.fireLng,
-                        h.lat,
-                        h.lng
-                    );
-                    return dist <= 500;
-                });
+                const nearbyHydrants = hydrants
+                    .map((h) => ({
+                        ...h,
+                        dist: getDistance(report.fireLat, report.fireLng, h.lat, h.lng),
+                    }))
+                    .filter((h) => h.dist <= 500)        // 500 m 이내
+                    .sort((a, b) => a.dist - b.dist)     // 거리 오름차순
+                    .slice(0, 10);                       // 화재 현장으로부터 가까운 10개만 마커 나옴
 
                 nearbyHydrants.forEach((h) => {
                     const marker = createImageMarker(
@@ -205,7 +204,7 @@ export default function useFireDispatch(
                     );
 
                     const infoContent = `
-    <div style="padding:5px; font-size:14px; white-space:nowrap;">
+    <div style="padding:5px;font-size:14px;white-space:nowrap;">
       <p><strong>상세위치:</strong> ${h.detailLocation || "정보 없음"}</p>
       <p><strong>출수압력:</strong> ${h.pressure || "정보 없음"} kPa</p>
     </div>
@@ -216,13 +215,14 @@ export default function useFireDispatch(
                         zIndex: 3,
                     });
 
-                    kakao.maps.event.addListener(marker, "mouseover", () => {
-                        infoWindow.open(mapInstance, marker);
-                    });
-                    kakao.maps.event.addListener(marker, "mouseout", () => {
-                        infoWindow.close();
-                    });
+                    kakao.maps.event.addListener(marker, "mouseover", () =>
+                        infoWindow.open(mapInstance, marker)
+                    );
+                    kakao.maps.event.addListener(marker, "mouseout", () =>
+                        infoWindow.close()
+                    );
                 });
+
 
                 /* ---------- 저수지/댐 마커 (화재 기준 1 km) ---------- */
                 const nearbyStorages = waterStorages.filter((ws) => {

@@ -39,6 +39,8 @@ public class WaterStorageDataLoader {
                         .length(Double.parseDouble(fields[3].trim()))
                         .capacity(Double.parseDouble(fields[4].trim()))
                         .address(fields[5].trim())
+                        .latitude(Double.parseDouble(fields[6].trim()))
+                        .longitude(Double.parseDouble(fields[7].trim()))
                         .build();
 
                 waterStorages.add(waterStorage);

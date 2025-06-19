@@ -27,6 +27,8 @@ public class WaterStorageService {
                 .length(dto.getLength())
                 .capacity(dto.getCapacity())
                 .address(dto.getAddress())
+                .latitude(dto.getLatitude())
+                .longitude(dto.getLongitude())
                 .build();
 
         WaterStorageEntity saved = waterStorageRepository.save(entity);
@@ -43,7 +45,9 @@ public class WaterStorageService {
                         entity.getWidth(),
                         entity.getLength(),
                         entity.getCapacity(),
-                        entity.getAddress()
+                        entity.getAddress(),
+                        entity.getLatitude(),
+                        entity.getLongitude()
                 )).collect(Collectors.toList());
     }
 }

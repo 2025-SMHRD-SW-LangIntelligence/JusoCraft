@@ -15,4 +15,6 @@ public class WaterStorageDto {
     private double length;
     private double capacity;
     private String address;
+    private double latitude;
+    private double longitude;
 }

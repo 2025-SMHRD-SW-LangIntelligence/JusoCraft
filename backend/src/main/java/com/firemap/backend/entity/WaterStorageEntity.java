@@ -33,4 +33,10 @@ public class WaterStorageEntity {
 
     @Column(nullable = false)
     private String address;
+
+    @Column(nullable = false)
+    private double latitude;
+
+    @Column(nullable = false)
+    private double longitude;
 }

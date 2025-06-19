@@ -37,4 +37,8 @@ public interface FireReportRepository extends JpaRepository<FireReportEntity, Lo
     List<FireReportEntity> findAllWithToken();
 
     List<FireReportEntity> findByInputStatus(ReportInputStatus inputStatus);
+
+    // 🔥 화재 위치가 있고, 신고 상태가 REPORTED인 것만
+    @Query("SELECT fr FROM FireReportEntity fr WHERE fr.fireLat IS NOT NULL AND fr.fireLng IS NOT NULL AND fr.inputStatus = 'REPORTED'")
+    List<FireReportEntity> findAllReportedWithLocation();
 }

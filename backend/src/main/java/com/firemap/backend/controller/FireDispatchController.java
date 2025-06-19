@@ -3,8 +3,8 @@ package com.firemap.backend.controller;
 import com.firemap.backend.dto.FireDispatchDto;
 import com.firemap.backend.enums.FireReportStatus;
 import com.firemap.backend.service.FireDispatchService;
-import lombok.RequiredArgsConstructor;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,11 +21,9 @@ public class FireDispatchController {
 
     /**
      * 출동지시 생성
-     * @param dto reportToken (토큰 문자열), fireStationId, status 포함
      */
     @PostMapping
     public ResponseEntity<FireDispatchDto> createDispatch(@RequestBody FireDispatchDto dto) {
-        System.out.println("createDispatch called with dto = " + dto);
         try {
             FireDispatchDto created = fireDispatchService.createDispatch(dto);
             return ResponseEntity.ok(created);
@@ -48,7 +46,7 @@ public class FireDispatchController {
     }
 
     /**
-     * 출동 상태 업데이트
+     * 출동 상태 업데이트 + 신고 상태도 함께 변경
      */
     @PutMapping("/{dispatchId}/status")
     public ResponseEntity<FireDispatchDto> updateStatus(@PathVariable Long dispatchId,
@@ -58,8 +56,7 @@ public class FireDispatchController {
             FireDispatchDto updated = fireDispatchService.updateStatus(dispatchId, enumStatus);
             return ResponseEntity.ok(updated);
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build(); // 잘못된 status 값일 경우 400 응답
+            return ResponseEntity.badRequest().build();
         }
     }
-    
 }

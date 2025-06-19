@@ -19,35 +19,47 @@ public class FireStationController {
 
     private final FireStationService fireStationService;
 
+    // 기본 소방서 목록 (상태 없음)
     @GetMapping
     public List<FireStationDto> getAllStations() {
         List<FireStationEntity> entities = fireStationService.getAllStations();
         return entities.stream()
-            .map(entity -> new FireStationDto(
-                entity.getId(),
-                entity.getCenterName(),
-                entity.getAddress(),
-                entity.getPhone(),
-                entity.getLatitude(),
-                entity.getLongitude()
-            ))
-            .collect(Collectors.toList());
+            .map(entity -> FireStationDto.builder()
+                        .id(entity.getId())
+                        .centerName(entity.getCenterName())
+                        .address(entity.getAddress())
+                        .phoneNumber(entity.getPhone())
+                        .latitude(entity.getLatitude())
+                        .longitude(entity.getLongitude())
+                        .status(null)                 // 상태 정보 없음
+                        .dispatchAvailable(true)      // 기본값 true
+                        .build())
+                .collect(Collectors.toList());
     }
 
+    // ID로 단일 소방서 조회 (상태 없음)
     @GetMapping("/{id}")
     public ResponseEntity<FireStationDto> getStationById(@PathVariable Long id) {
         FireStationEntity entity = fireStationService.getStationById(id);
         if (entity == null) {
             return ResponseEntity.notFound().build();
         }
-        FireStationDto dto = new FireStationDto(
-            entity.getId(),
-            entity.getCenterName(),
-            entity.getAddress(),
-            entity.getPhone(),
-            entity.getLatitude(),
-            entity.getLongitude()
-        );
+        FireStationDto dto = FireStationDto.builder()
+                .id(entity.getId())
+                .centerName(entity.getCenterName())
+                .address(entity.getAddress())
+                .phoneNumber(entity.getPhone())
+                .latitude(entity.getLatitude())
+                .longitude(entity.getLongitude())
+                .status(null)
+                .dispatchAvailable(true)
+                .build();
         return ResponseEntity.ok(dto);
+    }
+
+    // 출동 상태, 진행 상황 포함 소방서 목록
+    @GetMapping("/with-status")
+    public List<FireStationDto> getStationsWithStatus() {
+        return fireStationService.getAllStationsWithStatus();
     }
 }

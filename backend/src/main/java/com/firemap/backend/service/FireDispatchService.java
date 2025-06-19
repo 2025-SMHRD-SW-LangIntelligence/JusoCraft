@@ -11,53 +11,11 @@ import com.firemap.backend.repository.FireStationRepository;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
-
-// @Service
-// @RequiredArgsConstructor
-// public class FireDispatchService {
-
-//     private final FireDispatchRepository fireDispatchRepository;
-
-//     public FireDispatchDto createDispatch(FireDispatchDto dto) {
-//         FireDispatchEntity entity = FireDispatchEntity.builder()
-//                 .reportToken(dto.getReportToken())
-//                 .fireStationId(dto.getFireStationId())
-//                 .status(dto.getStatus())
-//                 .build();
-
-//         entity = fireDispatchRepository.save(entity);
-//         dto.setId(entity.getId());
-//         return dto;
-//     }
-
-//     public List<FireDispatchDto> getDispatchesByReportToken(String reportToken) {
-//         List<FireDispatchEntity> list = fireDispatchRepository.findByReportToken(reportToken);
-//         return list.stream().map(entity -> FireDispatchDto.builder()
-//                 .id(entity.getId())
-//                 .reportToken(entity.getReportToken())
-//                 .fireStationId(entity.getFireStationId())
-//                 .status(entity.getStatus())
-//                 .build()).collect(Collectors.toList());
-//     }
-
-//     public FireDispatchDto updateStatus(Long dispatchId, String status) {
-//         FireDispatchEntity entity = fireDispatchRepository.findById(dispatchId)
-//                 .orElseThrow(() -> new IllegalArgumentException("Dispatch not found"));
-//         entity.setStatus(status);
-//         fireDispatchRepository.save(entity);
-//         return FireDispatchDto.builder()
-//                 .id(entity.getId())
-//                 .reportToken(entity.getReportToken())
-//                 .fireStationId(entity.getFireStationId())
-//                 .status(entity.getStatus())
-//                 .build();
-//     }
-// }
-
 
 @Service
 @RequiredArgsConstructor
@@ -80,7 +38,8 @@ public class FireDispatchService {
         FireDispatchEntity entity = FireDispatchEntity.builder()
             .fireReport(fireReport)
             .fireStation(fireStation)
-            .status(dto.getStatus())
+            // .status(dto.getStatus())
+            .status(FireReportStatus.RECEIVED)
             .dispatchedAt(LocalDateTime.now())
             .build();
 
@@ -109,21 +68,26 @@ public class FireDispatchService {
     }
 
     /**
-     * 출동 상태 변경
+     * 출동 상태 변경 + 신고 상태 동기화
      */
+    @Transactional
     public FireDispatchDto updateStatus(Long dispatchId, FireReportStatus status) {
         FireDispatchEntity entity = fireDispatchRepository.findById(dispatchId)
             .orElseThrow(() -> new IllegalArgumentException("출동 정보를 찾을 수 없습니다."));
 
+        // 1. 출동 상태 변경
         entity.setStatus(status);
-        fireDispatchRepository.save(entity);
 
+        // 2. 신고 상태도 함께 변경
+        FireReportEntity report = entity.getFireReport();
+        report.setStatus(status);
+
+        // 3. 저장은 트랜잭션으로 자동 처리됨
         return FireDispatchDto.builder()
             .id(entity.getId())
-            .reportToken(entity.getFireReport().getReportToken().getToken())
+            .reportToken(report.getReportToken().getToken())
             .fireStationId(entity.getFireStation().getId())
             .status(entity.getStatus())
             .build();
     }
-
 }

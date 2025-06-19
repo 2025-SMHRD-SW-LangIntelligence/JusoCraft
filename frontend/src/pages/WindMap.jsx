@@ -1,4 +1,4 @@
-import { MapContainer, TileLayer, Marker } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Polyline } from "react-leaflet";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import "leaflet/dist/leaflet.css";
@@ -16,9 +16,32 @@ function WindArrow({ direction }) {
       background: url('/fire_move.gif') no-repeat center / contain;
     "></div>`,
     iconSize: [160, 60],
-    iconAnchor: [80, 60],
+    iconAnchor: [80, 30],
     className: "wind-arrow",
   });
+}
+
+// 🔁 풍향 기반 목적지 계산 함수
+function computeDestination(lat, lon, vecDegree, distanceKm = 0.5) {
+  const R = 6371; // 지구 반지름 (km)
+  const correctedBearing =
+    ((parseFloat(vecDegree) + 180) % 360) * (Math.PI / 180); // ✅ 풍향 + 180도
+
+  const lat1 = (lat * Math.PI) / 180;
+  const lon1 = (lon * Math.PI) / 180;
+
+  const lat2 = Math.asin(
+    Math.sin(lat1) * Math.cos(distanceKm / R) +
+      Math.cos(lat1) * Math.sin(distanceKm / R) * Math.cos(correctedBearing)
+  );
+  const lon2 =
+    lon1 +
+    Math.atan2(
+      Math.sin(correctedBearing) * Math.sin(distanceKm / R) * Math.cos(lat1),
+      Math.cos(distanceKm / R) - Math.sin(lat1) * Math.sin(lat2)
+    );
+
+  return [(lat2 * 180) / Math.PI, (lon2 * 180) / Math.PI];
 }
 
 const WeatherMap = () => {
@@ -60,7 +83,7 @@ const WeatherMap = () => {
   return (
     <DashboardLayout>
       <div className="relative w-full h-[80vh]">
-        {/* 상단 시간 정보 및 날씨 표시 */}
+        {/* 상단 정보 표시 */}
         <div
           style={{
             position: "absolute",
@@ -84,7 +107,7 @@ const WeatherMap = () => {
           <div>🧭 풍향: {selectedWeather?.VEC}°</div>
         </div>
 
-        {/* 시간 선택 버튼들 */}
+        {/* 시간 선택 버튼 */}
         <div
           style={{
             position: "absolute",
@@ -118,7 +141,7 @@ const WeatherMap = () => {
           ))}
         </div>
 
-        {/* 지도 */}
+        {/* 지도 렌더링 */}
         <MapContainer
           center={[35.1595, 126.8526]}
           zoom={13}
@@ -128,13 +151,33 @@ const WeatherMap = () => {
             attribution='&copy; <a href="https://carto.com/">CARTO</a>'
             url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
           />
-          {fires.map((fire, idx) => (
-            <Marker
-              key={idx}
-              position={[parseFloat(fire.lat), parseFloat(fire.lon)]}
-              icon={WindArrow({ direction: selectedWeather?.VEC || "0" })}
-            />
-          ))}
+
+          {fires.map((fire, idx) => {
+            const lat = parseFloat(fire.lat);
+            const lon = parseFloat(fire.lon);
+            const vec = selectedWeather?.VEC || "0";
+            const [destLat, destLon] = computeDestination(lat, lon, vec, 0.5);
+
+            return (
+              <>
+                <Marker
+                  key={`marker-${idx}`}
+                  position={[lat, lon]}
+                  icon={WindArrow({ direction: vec })}
+                />
+                <Polyline
+                  key={`line-${idx}`}
+                  positions={[
+                    [lat, lon],
+                    [destLat, destLon],
+                  ]}
+                  color="red"
+                  weight={2}
+                  dashArray="4"
+                />
+              </>
+            );
+          })}
         </MapContainer>
       </div>
     </DashboardLayout>

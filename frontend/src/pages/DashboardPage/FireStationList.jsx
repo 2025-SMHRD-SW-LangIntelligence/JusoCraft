@@ -52,7 +52,7 @@ export default function FireStationList({
                 return {
                     ...s,
                     distance,
-                    status: matchedDispatch?.status ?? null, // ✅ 상태 정보 포함
+                    status: matchedDispatch?.status ?? null, // 상태 정보 포함
                 };
             })
             .sort((a, b) => a.distance - b.distance);

@@ -3,54 +3,12 @@ package com.firemap.backend.dto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 import com.firemap.backend.entity.FireReportEntity;
-import com.firemap.backend.entity.FireReportTokenEntity;
 import com.firemap.backend.enums.FireReportStatus;
 import com.firemap.backend.enums.ReportInputStatus;
-
-// @Data
-// @AllArgsConstructor
-// public class FireReportDto {
-//     private Long id;
-//     // private Long reportedId;
-//     private Long tokenId;
-//     private String token;
-//     private double reporterLat;
-//     private double reporterLng;
-//     private double fireLat;
-//     private double fireLng;
-//     private String reporterAddress;
-//     private String fireAddress;
-//     private FireReportStatus status;
-//     private LocalDateTime reportedAt;
-//     private LocalDateTime dispatchedAt;
-//     private LocalDateTime resolvedAt;;
-// }
-
-// @Data
-// @AllArgsConstructor
-// public static FireReportDto from(FireReportEntity entity) {
-//     FireReportTokenEntity token = entity.getReportToken();
-//     return new FireReportDto(
-//         private Long id;
-//         private Long tokenId;
-//         private String token;
-//         private double reporterLat;
-//         private double reporterLng;
-//         private double fireLat;
-//         private double fireLng;
-//         private String reporterPhone;
-//         private String reportContent;
-//         private String reporterAddress;
-//         private String fireAddress;
-//         private LocalDateTime reportedAt;
-//         private ReportInputStatus inputStatus;
-//     );
-// }
 
 @Data
 @AllArgsConstructor
@@ -72,6 +30,8 @@ public class FireReportDto {
 
     private String reporterPhone;
     private String reportContent;
+    
+    private FireReportStatus status;
 
     private ReportInputStatus inputStatus;
 
@@ -91,6 +51,7 @@ public class FireReportDto {
             .reporterPhone(report.getReporterPhone())
             .reportContent(report.getReportContent())
             .inputStatus(report.getInputStatus())
+            .status(report.getStatus())
             .build();
     }
 }

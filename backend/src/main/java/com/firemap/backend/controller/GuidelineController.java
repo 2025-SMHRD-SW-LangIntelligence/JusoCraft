@@ -1,31 +1,26 @@
 package com.firemap.backend.controller;
 
+import com.firemap.backend.service.GuidelineService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.firemap.backend.service.GuidelineService;
-
 @RestController
-@RequestMapping("/guidelines")
+@RequestMapping("/api")
 public class GuidelineController {
 
     @Autowired
     private GuidelineService guidelineService;
 
-    // 상황 목록 조회
-    @GetMapping
-    public List<String> listSituations() {
+    @GetMapping("/situations")
+    public List<String> getSituations() throws IOException {
         return guidelineService.listSituations();
     }
 
-    // 상황별 행동요령 조회
-    @GetMapping("/{situation}")
-    public String getGuideline(@PathVariable String situation) {
+    @GetMapping("/guideline/{situation}")
+    public String getGuideline(@PathVariable String situation) throws IOException {
         return guidelineService.getGuideline(situation);
     }
 }

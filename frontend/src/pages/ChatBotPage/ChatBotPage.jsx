@@ -29,7 +29,7 @@ function ChatBotPage() {
         setLoading(true);
         try {
             const res = await fetch(
-                `/api/guideline/${encodeURIComponent(situation)}`
+                `${apiUrl}/guideline/${encodeURIComponent(situation)}`
             );
             const text = await res.text();
             setGuideline(text);

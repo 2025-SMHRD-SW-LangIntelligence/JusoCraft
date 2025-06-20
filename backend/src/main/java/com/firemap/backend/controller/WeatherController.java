@@ -46,8 +46,8 @@ public class WeatherController {
             urlBuilder.append("&" + URLEncoder.encode("dataType", "UTF-8") + "=JSON");
             urlBuilder.append("&" + URLEncoder.encode("base_date", "UTF-8") + "=" + baseDate);
             urlBuilder.append("&" + URLEncoder.encode("base_time", "UTF-8") + "=" + baseTime);
-            urlBuilder.append("&" + URLEncoder.encode("nx", "UTF-8") + "=55");   // 좌표 변경 가능
-            urlBuilder.append("&" + URLEncoder.encode("ny", "UTF-8") + "=127");
+            urlBuilder.append("&" + URLEncoder.encode("nx", "UTF-8") + "=58");   // 좌표 변경 가능
+            urlBuilder.append("&" + URLEncoder.encode("ny", "UTF-8") + "=74");
 
             URL url = new URL(urlBuilder.toString());
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -82,7 +82,7 @@ public class WeatherController {
                 }
             }
 
-            // 4. 화재 위치 정보 조회 (REPORTED 상태)
+            // 4. 화재 위치 정보 조회 (REPORTED 상태 - 사용자가 위치를 전송했을 때)
             List<Map<String, Object>> fires = new ArrayList<>();
             List<FireReportEntity> fireReports = fireReportRepository.findByInputStatus(ReportInputStatus.REPORTED);
 
@@ -94,13 +94,11 @@ public class WeatherController {
                     fireMap.put("lat", fire.getFireLat());
                     fireMap.put("lon", fire.getFireLng());
                     fireMap.put("address", fire.getFireAddress());
+                    fireMap.put("status", fire.getStatus() != null ? fire.getStatus().name() : "UNKNOWN");  // 👈 이 줄 추가
                     fires.add(fireMap);
-
-                    System.out.println(" → 위도: " + fire.getFireLat() + ", 경도: " + fire.getFireLng());
-                } else {
-                    System.out.println(" → 위경도 없음 (ID: " + fire.getId() + ")");
                 }
             }
+
 
             // 5. 응답 구성
             Map<String, Object> response = new HashMap<>();

@@ -4,6 +4,7 @@ import axios from "axios";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import DashboardLayout from "../layouts/DashboardLayout";
+import React from "react";
 
 // 🔥 화살표 아이콘 생성 함수
 function WindArrow({ direction }) {
@@ -72,7 +73,7 @@ const WeatherMap = () => {
 
   if (!data || !selectedTime) return <div>날씨 데이터를 불러오는 중...</div>;
 
-  const { weather, fires } = data;
+  const { weather, fires = [] } = data;
   const selectedWeather = weather[selectedTime];
 
   const formattedTime = `${selectedTime.slice(0, 2)}:${selectedTime.slice(
@@ -152,32 +153,37 @@ const WeatherMap = () => {
             url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
           />
 
-          {fires.map((fire, idx) => {
-            const lat = parseFloat(fire.lat);
-            const lon = parseFloat(fire.lon);
-            const vec = selectedWeather?.VEC || "0";
-            const [destLat, destLon] = computeDestination(lat, lon, vec, 0.5);
+          {fires
+            .filter(
+              (fire) =>
+                !["FULLY_SUPPRESSED", "WITHDRAWN", "MONITORING"].includes(
+                  fire.status
+                )
+            )
+            .map((fire, idx) => {
+              const lat = parseFloat(fire.lat);
+              const lon = parseFloat(fire.lon);
+              const vec = selectedWeather?.VEC || "0";
+              const [destLat, destLon] = computeDestination(lat, lon, vec, 0.5);
 
-            return (
-              <>
-                <Marker
-                  key={`marker-${idx}`}
-                  position={[lat, lon]}
-                  icon={WindArrow({ direction: vec })}
-                />
-                <Polyline
-                  key={`line-${idx}`}
-                  positions={[
-                    [lat, lon],
-                    [destLat, destLon],
-                  ]}
-                  color="red"
-                  weight={2}
-                  dashArray="4"
-                />
-              </>
-            );
-          })}
+              return (
+                <React.Fragment key={idx}>
+                  <Marker
+                    position={[lat, lon]}
+                    icon={WindArrow({ direction: vec })}
+                  />
+                  <Polyline
+                    positions={[
+                      [lat, lon],
+                      [destLat, destLon],
+                    ]}
+                    color="red"
+                    weight={2}
+                    dashArray="4"
+                  />
+                </React.Fragment>
+              );
+            })}
         </MapContainer>
       </div>
     </DashboardLayout>

@@ -1,69 +1,93 @@
-import { useRef, useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import ChatHeader from "./ChatHeader";
-import ChatMessageList from "./ChatMessageList";
-import ChatInputBox from "./ChatInputBox";
 import axios from "axios";
 
 function ChatBotPage() {
+    const [situations, setSituations] = useState([]);
+    const [guideline, setGuideline] = useState(
+        "상황을 선택하면 행동요령이 여기에 표시됩니다."
+    );
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
-    const [messages, setMessages] = useState([
-        {
-            id: 1,
-            sender: "bot",
-            text: "안녕하세요. 화재 행동요령 도우미 챗봇입니다. 무엇을 도와드릴까요?",
-        },
-    ]);
-    const [input, setInput] = useState("");
-    const messagesEndRef = useRef(null);
-
     const apiUrl = import.meta.env.VITE_API_URL;
 
     useEffect(() => {
-        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    }, [messages]);
-
-    const sendMessage = async () => {
-        if (!input.trim()) return;
-
-        const newMessage = { id: Date.now(), sender: "user", text: input };
-        setMessages((prev) => [...prev, newMessage]);
-        setInput("");
-
-        try {
-            const res = await axios.post(`${apiUrl}/chat`, {
-                question: input,
+        console.log("상황 리스트 요청 시작");
+        axios
+            .get(`${apiUrl}/situations`)
+            .then((res) => {
+                console.log("받은 상황 리스트:", res.data);
+                setSituations(res.data);
+            })
+            .catch((err) => {
+                console.error("상황 리스트 로딩 실패:", err);
+                setSituations([]);
             });
+    }, []);
 
-            const botMessage = {
-                id: Date.now() + 1,
-                sender: "bot",
-                text: res.data.answer,
-            };
-
-            setMessages((prev) => [...prev, botMessage]);
-        } catch (error) {
-            console.error("GPT 응답 실패", error);
-            setMessages((prev) => [
-                ...prev,
-                {
-                    id: Date.now() + 2,
-                    sender: "bot",
-                    text: "⚠️ 답변을 가져오지 못했습니다. 다시 시도해주세요.",
-                },
-            ]);
+    const handleSituationClick = async (situation) => {
+        setLoading(true);
+        try {
+            const res = await fetch(
+                `/api/guideline/${encodeURIComponent(situation)}`
+            );
+            const text = await res.text();
+            setGuideline(text);
+        } catch {
+            setGuideline("행동요령을 불러오는 중 오류가 발생했습니다.");
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
-        <div className="flex flex-col h-screen max-w-xl mx-auto border rounded shadow-md bg-white">
-            <ChatHeader onBack={() => navigate(-1)} />
-            <ChatMessageList messages={messages} endRef={messagesEndRef} />
-            <ChatInputBox
-                input={input}
-                setInput={setInput}
-                onSend={sendMessage}
-            />
+        <div style={{ maxWidth: "700px", margin: "auto", padding: "20px" }}>
+            <h1>🔥 화재 발생 시 행동요령 안내 챗봇 🔥</h1>
+
+            <div style={{ marginBottom: "20px" }}>
+                {situations.map((situation) => (
+                    <button
+                        key={situation}
+                        onClick={() => handleSituationClick(situation)}
+                        style={{
+                            margin: "5px",
+                            padding: "10px 15px",
+                            fontSize: "16px",
+                            cursor: "pointer",
+                        }}
+                    >
+                        {situation}
+                    </button>
+                ))}
+            </div>
+
+            <div
+                style={{
+                    whiteSpace: "pre-wrap",
+                    border: "1px solid #ccc",
+                    padding: "15px",
+                    minHeight: "150px",
+                    fontSize: "16px",
+                }}
+            >
+                {loading ? "불러오는 중..." : guideline}
+            </div>
+
+            <button
+                onClick={() => navigate(-1)}
+                style={{
+                    marginTop: "20px",
+                    padding: "10px 20px",
+                    fontSize: "16px",
+                    backgroundColor: "#444",
+                    color: "#fff",
+                    border: "none",
+                    cursor: "pointer",
+                    borderRadius: "5px",
+                }}
+            >
+                돌아가기
+            </button>
         </div>
     );
 }

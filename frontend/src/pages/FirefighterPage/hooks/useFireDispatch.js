@@ -188,11 +188,16 @@ export default function useFireDispatch(
                 const nearbyHydrants = hydrants
                     .map((h) => ({
                         ...h,
-                        dist: getDistance(report.fireLat, report.fireLng, h.lat, h.lng),
+                        dist: getDistance(
+                            report.fireLat,
+                            report.fireLng,
+                            h.lat,
+                            h.lng
+                        ),
                     }))
-                    .filter((h) => h.dist <= 500)        // 500 m 이내
-                    .sort((a, b) => a.dist - b.dist)     // 거리 오름차순
-                    .slice(0, 10);                       // 화재 현장으로부터 가까운 10개만 마커 나옴
+                    .filter((h) => h.dist <= 500) // 500 m 이내
+                    .sort((a, b) => a.dist - b.dist) // 거리 오름차순
+                    .slice(0, 10); // 화재 현장으로부터 가까운 10개만 마커 나옴
 
                 nearbyHydrants.forEach((h) => {
                     const marker = createImageMarker(
@@ -223,7 +228,6 @@ export default function useFireDispatch(
                     );
                 });
 
-
                 /* ---------- 저수지/댐 마커 (화재 기준 1 km) ---------- */
                 const nearbyStorages = waterStorages.filter((ws) => {
                     const d = getDistance(
@@ -243,8 +247,8 @@ export default function useFireDispatch(
                     const marker = createImageMarker(
                         lat,
                         lng,
-                        "/water-marker.png",
-                        20,
+                        "/water-marker.svg",
+                        46,
                         waterZIndex
                     );
 

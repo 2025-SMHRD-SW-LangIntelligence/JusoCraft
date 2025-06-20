@@ -122,4 +122,34 @@ public class FireReportService {
 
         return result;
     }
+
+    public List<CompletedReportDto> getCompletedReports() {
+        List<FireReportStatus> completed = List.of(
+                FireReportStatus.FULLY_SUPPRESSED,
+                FireReportStatus.WITHDRAWN,
+                FireReportStatus.MONITORING
+        );
+
+        return reportRepository.findByStatusIn(completed)
+                .stream()
+                .map(r -> {
+                    // 여러 소방서가 한 화재현장으로 갈 경우 고려해서 일단은 이렇게..
+                    String main = r.getDispatches().isEmpty()
+                            ? "—"
+                            : r.getDispatches().get(0)
+                            .getFireStation()
+                            .getCenterName();
+
+                    return CompletedReportDto.builder()
+                            .id(r.getId())
+                            .fireAddress(r.getFireAddress())
+                            .reportedAt(r.getReportedAt())
+                            .status(r.getStatus())
+                            .stationName(main)
+                            .build();
+                })
+                .toList();
+    }
+
+
 }

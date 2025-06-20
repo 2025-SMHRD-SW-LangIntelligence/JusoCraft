@@ -1,5 +1,6 @@
 package com.firemap.backend.controller;
 
+import com.firemap.backend.dto.CompletedReportDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -51,5 +52,10 @@ public class FireReportController {
     public ResponseEntity<Map<String, Long>> getStats() {
         Map<String, Long> stats = fireReportService.getFireReportStats();
         return ResponseEntity.ok(stats);
+    }
+
+    @GetMapping("/completed")
+    public List<CompletedReportDto> getCompletedReports() {
+        return fireReportService.getCompletedReports();
     }
 }

@@ -14,6 +14,7 @@ import WindMap from "./pages/WindMap";
 import AllReportsPage from "./pages/AllReportsPage";
 import ActiveDispatchPage from "./pages/ActiveDispatchPage.jsx"
 import CompletedReportsPage from "./pages/CompletedReportsPage.jsx";
+import EmergencyInfoPage from "./pages/EmergencyInfoPage.jsx";
 
 // 페이지
 function App() {
@@ -29,6 +30,7 @@ function App() {
         <Route path="/reports/all" element={<AllReportsPage />} />
         <Route path="/reports/dispatched" element={<ActiveDispatchPage />} />
         <Route path="/reports/completed" element={<CompletedReportsPage />} />
+        <Route path="/settings/hospitals" element={<EmergencyInfoPage />} />
       </Routes>
     </Router>
   );

@@ -90,4 +90,31 @@ public class FireDispatchService {
             .status(entity.getStatus())
             .build();
     }
+
+    public List<FireDispatchDto> getActiveDispatches() {
+        List<FireReportStatus> active = List.of(
+                FireReportStatus.RECEIVED,
+                FireReportStatus.DISPATCHED,
+                FireReportStatus.ARRIVED,
+                FireReportStatus.INITIAL_SUPPRESSION,
+                FireReportStatus.OVERHAUL,
+                FireReportStatus.MONITORING
+        );
+        return fireDispatchRepository.findByStatusIn(active)
+                .stream()
+                .map(e -> FireDispatchDto.builder()
+                        .id(e.getId())
+                        .reportToken(e.getFireReport()
+                                .getReportToken()
+                                .getToken())
+                        .fireStationId(e.getFireStation().getId())
+                        .fireStationName(e.getFireStation().getCenterName())
+                        .fireStationAddress(e.getFireStation().getAddress())
+                        .fireAddress(e.getFireReport().getFireAddress())
+                        .dispatchedAt(e.getDispatchedAt())
+                        .status(e.getStatus())
+                        .build())
+                .toList();
+    }
+
 }

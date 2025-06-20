@@ -59,4 +59,9 @@ public class FireDispatchController {
             return ResponseEntity.badRequest().build();
         }
     }
+
+    @GetMapping("/active")
+    public ResponseEntity<List<FireDispatchDto>> getActive() {
+        return ResponseEntity.ok(fireDispatchService.getActiveDispatches());
+    }
 }

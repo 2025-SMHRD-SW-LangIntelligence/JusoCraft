@@ -1,11 +1,13 @@
 package com.firemap.backend.controller;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.firemap.backend.dto.FireReportRequest;
 import com.firemap.backend.dto.FireReportDto;
 import com.firemap.backend.service.FireReportService;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*")
@@ -42,5 +44,12 @@ public class FireReportController {
             .stream()
             .map(FireReportDto::from)
             .collect(Collectors.toList());
+    }
+
+    // 상태 카운트
+    @GetMapping("/stats")
+    public ResponseEntity<Map<String, Long>> getStats() {
+        Map<String, Long> stats = fireReportService.getFireReportStats();
+        return ResponseEntity.ok(stats);
     }
 }

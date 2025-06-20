@@ -1,7 +1,10 @@
 package com.firemap.backend.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import com.firemap.backend.entity.*;
@@ -98,5 +101,25 @@ public class FireReportService {
     // REPORTED 상태인 신고만 조회
     public List<FireReportEntity> getReportedReports() {
         return reportRepository.findByInputStatus(ReportInputStatus.REPORTED);
+    }
+
+    // 상태 카운트
+    public Map<String, Long> getFireReportStats() {
+        LocalDate today = LocalDate.now();
+        LocalDateTime startOfDay = today.atStartOfDay();
+        LocalDateTime endOfDay = today.plusDays(1).atStartOfDay();
+
+        long todayReports = reportRepository.countByReportedAtBetween(startOfDay, endOfDay);
+        long received = reportRepository.countByStatus(FireReportStatus.RECEIVED);
+        long dispatched = reportRepository.countByStatus(FireReportStatus.DISPATCHED);
+        long completed = reportRepository.countByStatus(FireReportStatus.FULLY_SUPPRESSED);
+
+        Map<String, Long> result = new HashMap<>();
+        result.put("todayReports", todayReports);
+        result.put("received", received);
+        result.put("dispatched", dispatched);
+        result.put("completed", completed);
+
+        return result;
     }
 }

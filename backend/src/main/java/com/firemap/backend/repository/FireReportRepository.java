@@ -5,8 +5,10 @@ import org.springframework.data.jpa.repository.Query;
 
 import com.firemap.backend.entity.FireReportEntity;
 import com.firemap.backend.entity.FireReportTokenEntity;
+import com.firemap.backend.enums.FireReportStatus;
 import com.firemap.backend.enums.ReportInputStatus;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,4 +43,8 @@ public interface FireReportRepository extends JpaRepository<FireReportEntity, Lo
     // 🔥 화재 위치가 있고, 신고 상태가 REPORTED인 것만
     @Query("SELECT fr FROM FireReportEntity fr WHERE fr.fireLat IS NOT NULL AND fr.fireLng IS NOT NULL AND fr.inputStatus = 'REPORTED'")
     List<FireReportEntity> findAllReportedWithLocation();
+
+    // 상태 카운트
+    long countByReportedAtBetween(LocalDateTime start, LocalDateTime end);
+    long countByStatus(FireReportStatus status);
 }

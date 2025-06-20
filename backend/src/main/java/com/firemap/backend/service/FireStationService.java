@@ -45,6 +45,7 @@ public class FireStationService {
                 .longitude(entity.getLongitude())
                 .status(resolveLatestReportStatus(entity.getDispatches()))
                 .dispatchAvailable(isDispatchAvailable(entity.getDispatches()))
+                .sidoHeadquarter(entity.getSidoHeadquarter())
                 .build();
     }
 

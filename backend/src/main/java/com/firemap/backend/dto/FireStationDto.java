@@ -10,6 +10,7 @@ import lombok.*;
 @Builder
 public class FireStationDto {
     private Long id;
+    private String sidoHeadquarter;;
     private String centerName;
     private String address;
     private String phoneNumber;

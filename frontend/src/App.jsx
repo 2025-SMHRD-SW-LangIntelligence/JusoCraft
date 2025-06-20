@@ -15,6 +15,8 @@ import AllReportsPage from "./pages/AllReportsPage";
 import ActiveDispatchPage from "./pages/ActiveDispatchPage.jsx"
 import CompletedReportsPage from "./pages/CompletedReportsPage.jsx";
 import EmergencyInfoPage from "./pages/EmergencyInfoPage.jsx";
+import StationPage from "./pages/StationPage";
+
 
 // 페이지
 function App() {
@@ -31,6 +33,7 @@ function App() {
         <Route path="/reports/dispatched" element={<ActiveDispatchPage />} />
         <Route path="/reports/completed" element={<CompletedReportsPage />} />
         <Route path="/settings/hospitals" element={<EmergencyInfoPage />} />
+        <Route path="/settings/stations" element={<StationPage />} />
       </Routes>
     </Router>
   );

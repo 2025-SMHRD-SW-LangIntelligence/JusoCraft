@@ -60,4 +60,7 @@ public class FireDispatchEntity {
 
     @Column(name = "dispatched_at")
     private LocalDateTime dispatchedAt;
+
+    @Column(name = "completed_at")
+    private LocalDateTime completedAt;
 }

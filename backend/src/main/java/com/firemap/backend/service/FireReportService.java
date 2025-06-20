@@ -2,6 +2,7 @@ package com.firemap.backend.service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -124,31 +125,52 @@ public class FireReportService {
     }
 
     public List<CompletedReportDto> getCompletedReports() {
-        List<FireReportStatus> completed = List.of(
+
+        List<FireReportStatus> completedStatuses = List.of(
                 FireReportStatus.FULLY_SUPPRESSED,
                 FireReportStatus.WITHDRAWN,
                 FireReportStatus.MONITORING
         );
 
-        return reportRepository.findByStatusIn(completed)
-                .stream()
-                .map(r -> {
-                    // 여러 소방서가 한 화재현장으로 갈 경우 고려해서 일단은 이렇게..
-                    String main = r.getDispatches().isEmpty()
-                            ? "—"
-                            : r.getDispatches().get(0)
-                            .getFireStation()
-                            .getCenterName();
+        List<FireReportEntity> reports =
+                reportRepository.findByStatusIn(completedStatuses);
 
-                    return CompletedReportDto.builder()
-                            .id(r.getId())
-                            .fireAddress(r.getFireAddress())
-                            .reportedAt(r.getReportedAt())
-                            .status(r.getStatus())
-                            .stationName(main)
-                            .build();
-                })
-                .toList();
+        List<CompletedReportDto> result = new ArrayList<>();
+
+        for (FireReportEntity report : reports) {
+
+            /* 여러 소방서가 한 화재 현장을 방문할 경우를 가정하여 우선은 이렇게.. */
+            String mainStation = "—";
+            if (!report.getDispatches().isEmpty()) {
+                FireStationEntity firstStation =
+                        report.getDispatches().get(0).getFireStation();
+                mainStation = firstStation.getCenterName();
+            }
+
+            /* 가장 이른 completedAt */
+            LocalDateTime earliest = null;
+            for (FireDispatchEntity d : report.getDispatches()) {
+                LocalDateTime c = d.getCompletedAt();     // null 가능
+                if (c == null) continue;
+
+                if (earliest == null || c.isBefore(earliest)) {
+                    earliest = c;
+                }
+            }
+
+            CompletedReportDto dto = CompletedReportDto.builder()
+                    .id(report.getId())
+                    .fireAddress(report.getFireAddress())
+                    .reportedAt(report.getReportedAt())
+                    .completedAt(earliest)          // null 이면 아직 미기록
+                    .status(report.getStatus())
+                    .stationName(mainStation)
+                    .build();
+
+            result.add(dto);
+        }
+
+        return result;
     }
 
 

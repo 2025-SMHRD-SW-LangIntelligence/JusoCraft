@@ -82,13 +82,21 @@ public class FireDispatchService {
         FireReportEntity report = entity.getFireReport();
         report.setStatus(status);
 
+        // 완료 상태 시간 기록
+        if (status == FireReportStatus.FULLY_SUPPRESSED ||
+                status == FireReportStatus.WITHDRAWN ||
+        status == FireReportStatus.MONITORING) {
+            entity.setCompletedAt(LocalDateTime.now());
+        }
+
         // 3. 저장은 트랜잭션으로 자동 처리됨
         return FireDispatchDto.builder()
-            .id(entity.getId())
-            .reportToken(report.getReportToken().getToken())
-            .fireStationId(entity.getFireStation().getId())
-            .status(entity.getStatus())
-            .build();
+                .id(entity.getId())
+                .reportToken(entity.getFireReport().getReportToken().getToken())
+                .fireStationId(entity.getFireStation().getId())
+                .status(entity.getStatus())
+                .completedAt(entity.getCompletedAt())
+                .build();
     }
 
     public List<FireDispatchDto> getActiveDispatches() {
@@ -97,8 +105,7 @@ public class FireDispatchService {
                 FireReportStatus.DISPATCHED,
                 FireReportStatus.ARRIVED,
                 FireReportStatus.INITIAL_SUPPRESSION,
-                FireReportStatus.OVERHAUL,
-                FireReportStatus.MONITORING
+                FireReportStatus.OVERHAUL
         );
         return fireDispatchRepository.findByStatusIn(active)
                 .stream()
@@ -112,6 +119,7 @@ public class FireDispatchService {
                         .fireStationAddress(e.getFireStation().getAddress())
                         .fireAddress(e.getFireReport().getFireAddress())
                         .dispatchedAt(e.getDispatchedAt())
+                        .completedAt(e.getCompletedAt())
                         .status(e.getStatus())
                         .build())
                 .toList();

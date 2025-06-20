@@ -30,7 +30,12 @@ public class FireDispatchDto {
     private String fireStationName;
     private String fireStationAddress;
     private String fireAddress;
+
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime dispatchedAt;
+
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private LocalDateTime completedAt;
+
     private FireReportStatus status;
 }

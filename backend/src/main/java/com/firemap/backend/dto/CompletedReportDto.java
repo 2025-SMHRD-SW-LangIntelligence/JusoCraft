@@ -17,6 +17,8 @@ public class CompletedReportDto {
     private String fireAddress;
     private LocalDateTime reportedAt;
     private FireReportStatus status;
+    private LocalDateTime completedAt;
+
 
     private String stationName;
 }

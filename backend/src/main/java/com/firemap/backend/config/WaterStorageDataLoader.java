@@ -21,6 +21,11 @@ public class WaterStorageDataLoader {
 
     @PostConstruct
     public void loadDate() {
+        if (waterStorageRepository.count() > 0) {
+            System.out.println("광주 저수지/댐 데이터는 이미 존재합니다. 추가 로딩 생략.");
+            return;
+        }
+
         BufferedReader br = new BufferedReader(new InputStreamReader(
                 getClass().getResourceAsStream("/gwangju_water_storage_utf8.csv"), StandardCharsets.UTF_8));
 

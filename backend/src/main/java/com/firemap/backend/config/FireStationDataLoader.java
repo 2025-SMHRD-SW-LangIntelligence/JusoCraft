@@ -20,6 +20,11 @@ public class FireStationDataLoader {
 
     @PostConstruct
     public void loadData() {
+        if (fireStationRepository.count() > 0) {
+            System.out.println("광주 소방서 데이터는 이미 존재합니다. 추가 로딩 생략.");
+            return;
+        }
+
         try (BufferedReader br = new BufferedReader(new InputStreamReader(
                 getClass().getResourceAsStream("/gwangju_fire_station_utf-8.csv"), StandardCharsets.UTF_8))) {
 
@@ -45,10 +50,10 @@ public class FireStationDataLoader {
             }
 
             fireStationRepository.saveAll(stations);
-            System.out.println("✅ 소방서 데이터가 DB에 성공적으로 저장되었습니다. 총 개수: " + stations.size());
+            System.out.println("광주 소방서 데이터가 DB에 성공적으로 저장되었습니다. 총 개수: " + stations.size());
 
         } catch (Exception e) {
-            System.err.println("❌ 소방서 데이터 로드 실패:");
+            System.err.println("광주 소방서 데이터 로드 실패:");
             e.printStackTrace();
         }
     }

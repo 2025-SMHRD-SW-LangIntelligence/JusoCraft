@@ -21,6 +21,10 @@ public class EmergencyInfoDataLoader {
 
     @PostConstruct
     public void loadData() {
+        if (emergencyInfoRepository.count() > 0) {
+            System.out.println("광주 응급실 데이터는 이미 존재합니다. 추가 로딩 생략.");
+            return;
+        }
         try (Reader reader = new InputStreamReader(
                 getClass().getResourceAsStream("/gwangju_emergency_info_utf8.csv"),
                 StandardCharsets.UTF_8);

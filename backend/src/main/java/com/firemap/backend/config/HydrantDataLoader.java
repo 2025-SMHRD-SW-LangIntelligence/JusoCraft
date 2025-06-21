@@ -20,6 +20,11 @@ public class HydrantDataLoader {
 
     @PostConstruct
     public void loadData() {
+        if (hydrantRepository.count() > 0) {
+            System.out.println("광주 소화전 데이터는 이미 존재합니다. 추가 로딩 생략.");
+            return;
+        }
+
         try (BufferedReader br = new BufferedReader(new InputStreamReader(
                 getClass().getResourceAsStream("/gwangju_fire_hydrants_utf8.csv"), StandardCharsets.UTF_8))) {
 

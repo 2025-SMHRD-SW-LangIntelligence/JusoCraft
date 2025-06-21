@@ -139,12 +139,23 @@ function ChatBotPage() {
    // 버튼 클릭 시 대피 요령 말풍선 출력
    const handleSelectGuide = (title) => {
       const guideText = fireGuides[title];
-      const newMessage = {
+
+      // 1. 사용자 말풍선 추가
+      const userMessage = {
          id: Date.now(),
+         sender: "user",
+         text: title, // 사용자가 선택한 버튼 제목
+      };
+
+      // 2. 챗봇 말풍선 추가
+      const botMessage = {
+         id: Date.now() + 1,
          sender: "bot",
          text: guideText,
       };
-      setMessages((prev) => [...prev, newMessage]);
+
+      // 3. 순서대로 추가
+      setMessages((prev) => [...prev, userMessage, botMessage]);
    };
 
    // 사용자 자유 입력 + GPT 응답

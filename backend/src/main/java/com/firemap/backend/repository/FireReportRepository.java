@@ -47,6 +47,7 @@ public interface FireReportRepository extends JpaRepository<FireReportEntity, Lo
     // 상태 카운트
     long countByReportedAtBetween(LocalDateTime start, LocalDateTime end);
     long countByStatus(FireReportStatus status);
+    long countByStatusIn(List<FireReportStatus> statuses);
 
     // 완료 상태를 추출하기 위해
     List<FireReportEntity> findByStatusIn(List<FireReportStatus> statuses);

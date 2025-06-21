@@ -111,9 +111,34 @@ public class FireReportService {
         LocalDateTime endOfDay = today.plusDays(1).atStartOfDay();
 
         long todayReports = reportRepository.countByReportedAtBetween(startOfDay, endOfDay);
-        long received = reportRepository.countByStatus(FireReportStatus.RECEIVED);
-        long dispatched = reportRepository.countByStatus(FireReportStatus.DISPATCHED);
-        long completed = reportRepository.countByStatus(FireReportStatus.FULLY_SUPPRESSED);
+        // long received = reportRepository.countByStatus(FireReportStatus.RECEIVED);
+        // long dispatched = reportRepository.countByStatus(FireReportStatus.DISPATCHED);
+        long received = reportRepository.countByStatusIn(List.of(
+            FireReportStatus.RECEIVED,
+            FireReportStatus.DISPATCHED,
+            FireReportStatus.ARRIVED,
+            FireReportStatus.INITIAL_SUPPRESSION,
+            FireReportStatus.OVERHAUL,
+            FireReportStatus.FULLY_SUPPRESSED,
+            FireReportStatus.WITHDRAWN,
+            FireReportStatus.MONITORING
+
+        ));
+        long dispatched = reportRepository.countByStatusIn(List.of(
+            FireReportStatus.DISPATCHED,
+            FireReportStatus.ARRIVED,
+            FireReportStatus.INITIAL_SUPPRESSION,
+            FireReportStatus.OVERHAUL,
+            FireReportStatus.FULLY_SUPPRESSED,
+            FireReportStatus.WITHDRAWN,
+            FireReportStatus.MONITORING
+
+        ));
+        long completed = reportRepository.countByStatusIn(List.of(
+            FireReportStatus.FULLY_SUPPRESSED,
+            FireReportStatus.WITHDRAWN,
+            FireReportStatus.MONITORING
+        ));
 
         Map<String, Long> result = new HashMap<>();
         result.put("todayReports", todayReports);

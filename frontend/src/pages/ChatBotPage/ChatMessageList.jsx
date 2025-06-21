@@ -13,7 +13,7 @@ function ChatMessageList({ messages, endRef }) {
                      msg.sender === "bot" ? "bg-blue-100" : "bg-green-100"
                   }`}
                >
-                  <p className="text-sm whitespace-pre-wrap leading-relaxed">
+                  <p className="text-base whitespace-pre-wrap leading-relaxed">
                      {msg.text}
                   </p>
                </div>

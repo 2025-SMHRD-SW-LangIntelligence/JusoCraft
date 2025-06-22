@@ -6,21 +6,22 @@ import ChatInputBox from "./ChatInputBox";
 import axios from "axios";
 
 function ChatBotPage() {
-   const navigate = useNavigate();
-   const [messages, setMessages] = useState([
-      {
-         id: 1,
-         sender: "bot",
-         text: "안녕하세요. 화재 행동요령 도우미 챗봇입니다. 아래에서 대피 상황을 선택하거나 궁금한 내용을 질문해주세요.",
-      },
-   ]);
-   const [input, setInput] = useState("");
-   const messagesEndRef = useRef(null);
-   const apiUrl = import.meta.env.VITE_API_URL;
+    const navigate = useNavigate();
+    const [messages, setMessages] = useState([
+        {
+            id: 1,
+            sender: "bot",
+            text: "안녕하세요. 화재 행동요령 도우미 챗봇입니다. 아래에서 대피 상황을 선택하거나 궁금한 내용을 질문해주세요.",
+        },
+    ]);
+    const [input, setInput] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
+    const messagesEndRef = useRef(null);
+    const apiUrl = import.meta.env.VITE_API_URL;
 
-   // 대피 요령 데이터
-   const fireGuides = {
-      "아파트 화재 대피": `✅ 가족과 이웃에게 알리고 119에 신속히 신고하세요.
+    // 대피 요령 데이터
+    const fireGuides = {
+        "아파트 화재 대피": `✅ 가족과 이웃에게 알리고 119에 신속히 신고하세요.
 - 화재 위치, 동호수, 화재 상태, 갇힌 사람 여부를 정확히 전달합니다.
 
 ✅ 초기 진압이 어렵다면 신속하게 대피하세요.
@@ -40,7 +41,7 @@ function ChatBotPage() {
 - 소화기, 옥내소화전 등을 이용해 초기진압 시도
 `,
 
-      "공연장 화재 대피": `✅ "불이야!" 외치거나 화재경보 비상벨을 눌러주세요.
+        "공연장 화재 대피": `✅ "불이야!" 외치거나 화재경보 비상벨을 눌러주세요.
 
 ✅ 대피 시 주의사항
 - 안내원의 지시에 따라 낮은 자세로 천천히 이동
@@ -49,7 +50,7 @@ function ChatBotPage() {
 - 구조요원 활동 방해하지 않도록 침착하게 이동
 `,
 
-      "산 화재 대피": `✅ 산불 발견 시 119, 112, 시·군·구청에 신고하세요.
+        "산 화재 대피": `✅ 산불 발견 시 119, 112, 시·군·구청에 신고하세요.
 
 ✅ 대피 요령
 - 바람 반대 방향, 저지대, 수풀이 적은 곳으로 이동
@@ -65,7 +66,7 @@ function ChatBotPage() {
 - 자율 참여 시 현장대책본부 안내를 따르세요
 `,
 
-      "고층건물 화재 대피": `✅ 화재 경보기를 누르고 119에 신고하세요.
+        "고층건물 화재 대피": `✅ 화재 경보기를 누르고 119에 신고하세요.
 
 ✅ 대피 요령
 - 문을 닫고 탈출 (열린 문도 닫기)
@@ -80,7 +81,7 @@ function ChatBotPage() {
 - 장애인 등 대피가 어려운 사람은 도울 동료를 정해두기
 `,
 
-      "고속철도 화재 대피": `✅ 차량 인터폰으로 승무원에게 알리세요.
+        "고속철도 화재 대피": `✅ 차량 인터폰으로 승무원에게 알리세요.
 
 ✅ 초기 조치
 - 소화기 사용 가능 시 즉시 진화
@@ -95,7 +96,7 @@ function ChatBotPage() {
 - 선로에 머무르지 말고 구호 차량 도착까지 대기
 `,
 
-      "도로 터널 화재 대피": `✅ 가능하면 차량과 함께 터널 밖으로 이동하세요.
+        "도로 터널 화재 대피": `✅ 가능하면 차량과 함께 터널 밖으로 이동하세요.
 
 ✅ 이동이 불가능할 경우
 - 갓길에 정차 후 키는 꽂은 채 하차
@@ -106,7 +107,7 @@ function ChatBotPage() {
 - 유도등 따라 터널 외부로 빠르게 이동
 `,
 
-      "지하철 화재 대피": `📍 역사 내 화재 시
+        "지하철 화재 대피": `📍 역사 내 화재 시
 ✅ 비상벨, 비상전화, 119로 신고
 - 소화기·소화전으로 초기 진화
 - 유도등 따라 낮은 자세로 대피
@@ -122,7 +123,7 @@ function ChatBotPage() {
 - 서로 손잡고 침착하게 이동
 `,
 
-      "지하상가 화재 대피": `✅ 침착하게 행동하세요.
+        "지하상가 화재 대피": `✅ 침착하게 행동하세요.
 
 ✅ 대피 요령
 - 한 방향을 정해 빠르게 이동
@@ -130,96 +131,107 @@ function ChatBotPage() {
 - 연기 반대 방향, 공기 유입 방향으로 대피
 - 빠른 판단으로 우왕좌왕하지 않기
 `,
-   };
+    };
 
-   useEffect(() => {
-      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-   }, [messages]);
+    useEffect(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, [messages]);
 
-   // 버튼 클릭 시 대피 요령 말풍선 출력
-   const handleSelectGuide = (title) => {
-      const guideText = fireGuides[title];
+    // 버튼 클릭 시 대피 요령 말풍선 출력
+    const handleSelectGuide = (title) => {
+        const guideText = fireGuides[title];
 
-      // 1. 사용자 말풍선 추가
-      const userMessage = {
-         id: Date.now(),
-         sender: "user",
-         text: title, // 사용자가 선택한 버튼 제목
-      };
+        // 1. 사용자 말풍선 추가
+        const userMessage = {
+            id: Date.now(),
+            sender: "user",
+            text: title, // 사용자가 선택한 버튼 제목
+        };
 
-      // 2. 챗봇 말풍선 추가
-      const botMessage = {
-         id: Date.now() + 1,
-         sender: "bot",
-         text: guideText,
-      };
-
-      // 3. 순서대로 추가
-      setMessages((prev) => [...prev, userMessage, botMessage]);
-   };
-
-   // 사용자 자유 입력 + GPT 응답
-   const sendMessage = async () => {
-      if (!input.trim()) return;
-
-      const newMessage = { id: Date.now(), sender: "user", text: input };
-      setMessages((prev) => [...prev, newMessage]);
-      setInput("");
-
-      try {
-         const res = await axios.post(`${apiUrl}/chat`, {
-            question: input,
-         });
-
-         const botMessage = {
+        // 2. 챗봇 말풍선 추가
+        const botMessage = {
             id: Date.now() + 1,
             sender: "bot",
-            text: res.data.answer,
-         };
+            text: guideText,
+        };
 
-         setMessages((prev) => [...prev, botMessage]);
-      } catch (error) {
-         console.error("GPT 응답 실패", error);
-         setMessages((prev) => [
-            ...prev,
-            {
-               id: Date.now() + 2,
-               sender: "bot",
-               text: "⚠️ 답변을 가져오지 못했습니다. 다시 시도해주세요.",
-            },
-         ]);
-      }
-   };
+        // 3. 순서대로 추가
+        setMessages((prev) => [...prev, userMessage, botMessage]);
+    };
 
-   return (
-      <div className="flex flex-col h-screen max-w-xl mx-auto border rounded shadow-md bg-white">
-         <ChatHeader onBack={() => navigate(-1)} />
+    // 사용자 자유 입력 + GPT 응답
+    const sendMessage = async () => {
+        if (!input.trim()) return;
 
-         {/* 메시지 영역 */}
-         <ChatMessageList messages={messages} endRef={messagesEndRef} />
+        const newMessage = { id: Date.now(), sender: "user", text: input };
+        setMessages((prev) => [...prev, newMessage]);
+        setInput("");
+        setIsLoading(true); // 로딩 시작
 
-         {/* 대피요령 선택 버튼 */}
-         <div className="px-4 py-2 bg-gray-50 border-t border-gray-200">
-            <p className="mb-2 text-sm font-medium text-gray-700">
-               대피 상황 선택:
-            </p>
-            <div className="flex flex-wrap gap-2">
-               {Object.keys(fireGuides).map((title) => (
-                  <button
-                     key={title}
-                     onClick={() => handleSelectGuide(title)}
-                     className="text-sm px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded-full"
-                  >
-                     {title}
-                  </button>
-               ))}
+        try {
+            const res = await axios.post(`${apiUrl}/chat`, {
+                question: input,
+            });
+
+            const botMessage = {
+                id: Date.now() + 1,
+                sender: "bot",
+                text: res.data.answer,
+            };
+
+            setMessages((prev) => [...prev, botMessage]);
+        } catch (error) {
+            console.error("GPT 응답 실패", error);
+            setMessages((prev) => [
+                ...prev,
+                {
+                    id: Date.now() + 2,
+                    sender: "bot",
+                    text: "⚠️ 답변을 가져오지 못했습니다. 다시 시도해주세요.",
+                },
+            ]);
+        } finally {
+            setIsLoading(false); // 로딩 종료
+        }
+    };
+
+    return (
+        <div className="flex flex-col h-screen max-w-xl mx-auto border rounded shadow-md bg-white">
+            <ChatHeader onBack={() => navigate(-1)} />
+
+            {/* 메시지 영역 */}
+            <ChatMessageList messages={messages} endRef={messagesEndRef} />
+            {isLoading && (
+                <div className="flex items-center justify-start px-4 py-2 text-sm text-white animate-pulse bg-blue-600">
+                    화재 안전 도우미가 답변을 준비 중입니다.
+                </div>
+            )}
+            {/* 대피요령 선택 버튼 */}
+            <div className="px-4 py-2 bg-gray-50 border-t border-gray-200">
+                <p className="mb-2 text-sm font-medium text-gray-700">
+                    대피 상황 선택:
+                </p>
+                <div className="flex flex-wrap gap-2">
+                    {Object.keys(fireGuides).map((title) => (
+                        <button
+                            key={title}
+                            onClick={() => handleSelectGuide(title)}
+                            className="text-sm px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded-full"
+                        >
+                            {title}
+                        </button>
+                    ))}
+                </div>
             </div>
-         </div>
 
-         {/* 입력창 */}
-         <ChatInputBox input={input} setInput={setInput} onSend={sendMessage} />
-      </div>
-   );
+            {/* 입력창 */}
+            <ChatInputBox
+                input={input}
+                setInput={setInput}
+                onSend={sendMessage}
+            />
+        </div>
+    );
 }
 
 export default ChatBotPage;

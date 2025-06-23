@@ -12,7 +12,7 @@ export default function ModalWrapper({
       md: "max-w-md",
       lg: "max-w-3xl",
       xl: "max-w-[100rem]",
-   }[size];
+}[size];
 
    return (
       <div className="fixed inset-0 z-[600] flex items-center justify-center bg-black bg-opacity-50 p-4 overflow-y-auto">

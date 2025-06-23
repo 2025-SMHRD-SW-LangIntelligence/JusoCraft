@@ -24,40 +24,42 @@ function UrlTable({ urls, reports }) {
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-100">
-                                {urls.map((entry, idx) => {
-                                    const matchedReport = reports.find(
-                                        (r) => r.id === entry.reportId
-                                    );
+                                {[...urls]
+                                    .sort((a, b) => a.reportId - b.reportId)
+                                    .map((entry, idx) => {
+                                        const matchedReport = reports.find(
+                                            (r) => r.id === entry.reportId
+                                        );
 
-                                    return (
-                                        <tr key={idx}>
-                                            <td className="px-2 py-2 text-gray-700 text-center">
-                                                {matchedReport ? (
-                                                    entry.reportId
-                                                ) : (
-                                                    <span className="text-sm">
-                                                        미제출
-                                                    </span>
-                                                )}
-                                            </td>
-                                            <td className="px-2 py-2 text-gray-700 text-center">
-                                                {matchedReport?.reporterPhone ||
-                                                    entry.phone ||
-                                                    "-"}
-                                            </td>
-                                            <td className="px-2 py-4 text-blue-600 break-all text-left text-sm max-w-[400px] truncate whitespace-nowrap overflow-hidden">
-                                                <a
-                                                    href={entry.url}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="hover:underline"
-                                                >
-                                                    {entry.url}
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    );
-                                })}
+                                        return (
+                                            <tr key={idx}>
+                                                <td className="px-2 py-2 text-gray-700 text-center">
+                                                    {matchedReport ? (
+                                                        entry.reportId
+                                                    ) : (
+                                                        <span className="text-sm">
+                                                            미제출
+                                                        </span>
+                                                    )}
+                                                </td>
+                                                <td className="px-2 py-2 text-gray-700 text-center">
+                                                    {matchedReport?.reporterPhone ||
+                                                        entry.phone ||
+                                                        "-"}
+                                                </td>
+                                                <td className="px-2 py-4 text-blue-600 break-all text-left text-sm max-w-[400px] truncate whitespace-nowrap overflow-hidden">
+                                                    <a
+                                                        href={entry.url}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="hover:underline"
+                                                    >
+                                                        {entry.url}
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        );
+                                    })}
                             </tbody>
                         </table>
                     </div>

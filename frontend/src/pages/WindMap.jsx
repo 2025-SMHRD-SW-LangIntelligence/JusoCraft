@@ -269,7 +269,7 @@ const WindMap = () => {
 
     return (
         <DashboardLayout>
-            <div className="relative w-full h-[80vh]">
+            <div className="overflow-hidden relative w-full h-[80vh] border rounded-2xl">
                 {loading ? (
                     <div className="flex items-center justify-center h-full flex-col animate-pulse text-gray-500">
                         <div className="w-12 h-12 mb-4 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>

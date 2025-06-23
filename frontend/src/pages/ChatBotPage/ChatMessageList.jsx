@@ -5,7 +5,7 @@ function ChatMessageList({ messages, endRef }) {
                 <div
                     key={msg.id}
                     className={`flex ${
-                        msg.sender === "bot" ? "justify-end" : "justify-start"
+                        msg.sender === "bot" ? "justify-start" : "justify-end"
                     }`}
                 >
                     <div

@@ -156,14 +156,13 @@ const WindMap = () => {
                     const vec = weather.VEC || "0";
                     const speed = parseFloat(weather.WSD || "0");
                     const isRain = weather.PTY && weather.PTY !== "0";
-                    // const baseDistanceKm = isRain
-                    //     ? 0.05
-                    //     : 0.1 + 0.02 * (index + 1);
-
-                    // 풍속 기반 거리 계산식 적용
+                    // 풍속 거리 기반 계산식
                     const baseDistanceKm = isRain
                         ? 0.05
-                        : Math.min(0.5, speed * 0.02 * (index + 1)); // 예: 3m/s * 0.02 * 3 = 0.18km
+                        : Math.max(
+                              0.03, // 단계별 최소 거리
+                              Math.min(0.5, speed * 0.02 * (index + 1)) // 화재 확산 반경 = 풍속 × 계수(0.02) × 시간단계 + 보정값
+                          );
 
                     const center =
                         index === 0
@@ -174,7 +173,14 @@ const WindMap = () => {
                                   vec,
                                   baseDistanceKm * index
                               );
-
+                    console.log(
+                        `${fire.address} - step: ${
+                            index + 1
+                        }, speed: ${speed}, distanceKm: ${baseDistanceKm.toFixed(
+                            3
+                        )}, center:`,
+                        center
+                    );
                     stepCircles.push({
                         step: index + 1,
                         center,

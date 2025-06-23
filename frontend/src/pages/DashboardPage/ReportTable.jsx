@@ -61,7 +61,7 @@ export default function ReportTable({ reports, onSelect }) {
 
     return (
         <div className="rounded-2xl border border-gray-200 bg-white">
-            <div className="px-6 py-4 flex justify-between items-center">
+            <div className="px-6 pt-4 flex justify-between items-center">
                 <h3 className="text-base font-medium text-gray-800">
                     위치 입력 완료 목록
                 </h3>

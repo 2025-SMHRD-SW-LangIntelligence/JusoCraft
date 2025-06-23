@@ -57,7 +57,9 @@ public class FireReportService {
             report.setFireLng(request.getFireLng());
             report.setReporterAddress(request.getReporterAddress());
             report.setFireAddress(request.getFireAddress());
-            report.setReportedAt(request.getReportedAt());
+            if (report.getReportedAt() == null) {   // 최초 1회만 신고 시간 작성
+                report.setReportedAt(request.getReportedAt());
+            }
             report.setInputStatus(ReportInputStatus.REPORTED);
         }
 
@@ -93,7 +95,9 @@ public class FireReportService {
         report.setFireLng(request.getFireLng());
         report.setFireAddress(request.getFireAddress());
         report.setReporterAddress(request.getReporterAddress());
-        report.setReportedAt(LocalDateTime.now());
+        if (report.getReportedAt() == null) {
+            report.setReportedAt(LocalDateTime.now());
+        }
         report.setInputStatus(ReportInputStatus.REPORTED);
 
         reportRepository.save(report);

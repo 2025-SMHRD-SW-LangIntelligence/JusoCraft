@@ -14,7 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -100,6 +102,7 @@ public class FireDispatchService {
     }
 
     public List<FireDispatchDto> getActiveDispatches() {
+
         List<FireReportStatus> active = List.of(
                 FireReportStatus.RECEIVED,
                 FireReportStatus.DISPATCHED,
@@ -107,13 +110,26 @@ public class FireDispatchService {
                 FireReportStatus.INITIAL_SUPPRESSION,
                 FireReportStatus.OVERHAUL
         );
-        return fireDispatchRepository.findByStatusIn(active)
-                .stream()
+
+        // 1) 진행 중 dispatch 전부 조회
+        List<FireDispatchEntity> list = fireDispatchRepository.findByStatusIn(active);
+
+        // 2) 신고 토큰별로 먼저 출동 지시된 dispatch 하나만 보존
+        Map<String, FireDispatchEntity> latestByToken = new LinkedHashMap<>();
+        for (FireDispatchEntity d : list) {
+            String token = d.getFireReport().getReportToken().getToken();
+
+            FireDispatchEntity prev = latestByToken.get(token);
+            if (prev == null || d.getDispatchedAt().isBefore(prev.getDispatchedAt())) {
+                latestByToken.put(token, d);
+            }
+        }
+
+        // 3) DTO 변환
+        return latestByToken.values().stream()
                 .map(e -> FireDispatchDto.builder()
                         .id(e.getId())
-                        .reportToken(e.getFireReport()
-                                .getReportToken()
-                                .getToken())
+                        .reportToken(e.getFireReport().getReportToken().getToken())
                         .fireStationId(e.getFireStation().getId())
                         .fireStationName(e.getFireStation().getCenterName())
                         .fireStationAddress(e.getFireStation().getAddress())

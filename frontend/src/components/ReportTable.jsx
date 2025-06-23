@@ -1,4 +1,7 @@
-import { toKr } from "../utils/StatusLabel";
+import { toKr } from "../utils/statusLabel";   // utils 폴더 파일명과 대소문자 맞추기
+
+const fmt = (iso) =>
+    iso ? new Date(iso).toLocaleString("sv-SE", { timeZone: "Asia/Seoul" }) : "-";
 
 export default function ReportTable({ data }) {
     return (
@@ -12,13 +15,14 @@ export default function ReportTable({ data }) {
                 <th className="p-2 border">상태</th>
             </tr>
             </thead>
+
             <tbody>
             {data.map((r) => (
                 <tr key={r.id}>
                     <td className="p-2 border text-center">{r.id}</td>
-                    <td className="p-2 border">{r.reporterAddress}</td>
-                    <td className="p-2 border">{r.fireAddress}</td>
-                    <td>{r.reportedAt.replace('T', ' ')}</td>
+                    <td className="p-2 border">{r.reporterAddress ?? "-"}</td>
+                    <td className="p-2 border">{r.fireAddress ?? "-"}</td>
+                    <td className="p-2 border">{fmt(r.reportedAt)}</td>
                     <td className="p-2 border">{toKr(r.status)}</td>
                 </tr>
             ))}

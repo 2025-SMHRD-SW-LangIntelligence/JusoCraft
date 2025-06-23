@@ -82,7 +82,7 @@ export default function ReportTable({ reports, onSelect }) {
                 </button>
             </div>
 
-            <div className="p-4 border-t border-gray-100 sm:p-6">
+            <div className="p-4 border-gray-100 sm:p-6">
                 <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
                     <div className="max-w-full overflow-x-auto">
                         <table className="min-w-full text-sm">

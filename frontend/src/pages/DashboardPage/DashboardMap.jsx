@@ -127,7 +127,7 @@ export default function DashboardMap() {
                 </div>
             </div>
 
-            <div className="p-4 border-t border-gray-100 sm:p-6">
+            <div className="p-4 border-gray-100 sm:p-6">
                 <MapContainer
                     center={mapCenter}
                     zoom={zoom}

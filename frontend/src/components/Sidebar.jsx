@@ -62,11 +62,6 @@ const menuGroups = [
                 icon: <PiSiren className="text-xl flex-none" />,
             },
             {
-                name: "소화전 정보 관리",
-                path: "/settings/hydrants",
-                icon: <PiFireExtinguisher className="text-xl flex-none" />,
-            },
-            {
                 name: "소방서 정보 관리",
                 path: "/settings/stations",
                 icon: <PiFireTruck className="text-xl flex-none" />,

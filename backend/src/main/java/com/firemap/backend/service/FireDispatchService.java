@@ -48,11 +48,12 @@ public class FireDispatchService {
         fireDispatchRepository.save(entity);
 
         return FireDispatchDto.builder()
-            .id(entity.getId())
-            .reportToken(dto.getReportToken())
-            .fireStationId(dto.getFireStationId())
-            .status(entity.getStatus())
-            .build();
+                .id(entity.getId())
+                .reportId(fireReport.getId())
+                .reportToken(dto.getReportToken())
+                .fireStationId(dto.getFireStationId())
+                .status(entity.getStatus())
+                .build();
     }
 
     /**
@@ -62,11 +63,12 @@ public class FireDispatchService {
         List<FireDispatchEntity> dispatches = fireDispatchRepository.findByFireReport_ReportToken_Token(reportToken);
 
         return dispatches.stream().map(entity -> FireDispatchDto.builder()
-            .id(entity.getId())
-            .reportToken(reportToken)
-            .fireStationId(entity.getFireStation().getId())
-            .status(entity.getStatus())
-            .build()).collect(Collectors.toList());
+                .id(entity.getId())
+                .reportId(entity.getFireReport().getId())
+                .reportToken(reportToken)
+                .fireStationId(entity.getFireStation().getId())
+                .status(entity.getStatus())
+                .build()).collect(Collectors.toList());
     }
 
     /**
@@ -94,6 +96,7 @@ public class FireDispatchService {
         // 3. 저장은 트랜잭션으로 자동 처리됨
         return FireDispatchDto.builder()
                 .id(entity.getId())
+                .reportId(entity.getFireReport().getId())
                 .reportToken(entity.getFireReport().getReportToken().getToken())
                 .fireStationId(entity.getFireStation().getId())
                 .status(entity.getStatus())
@@ -129,6 +132,7 @@ public class FireDispatchService {
         return latestByToken.values().stream()
                 .map(e -> FireDispatchDto.builder()
                         .id(e.getId())
+                        .reportId(e.getFireReport().getId())
                         .reportToken(e.getFireReport().getReportToken().getToken())
                         .fireStationId(e.getFireStation().getId())
                         .fireStationName(e.getFireStation().getCenterName())

@@ -25,6 +25,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class FireDispatchDto {
     private Long id;
+    private Long reportId;
     private String reportToken; // FireReportToken의 token 문자열
     private Long fireStationId;
     private String fireStationName;

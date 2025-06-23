@@ -22,7 +22,7 @@ export default function CompletedTable({ data }) {
         <table className="w-full text-sm border">
             <thead className="bg-gray-100">
             <tr>
-                <th className="p-2 border">ID</th>
+                <th className="p-2 border">신고 ID</th>
                 <th className="p-2 border">담당 소방서</th>
                 <th className="p-2 border">화재 주소</th>
                 <th className="p-2 border">신고 시각</th>

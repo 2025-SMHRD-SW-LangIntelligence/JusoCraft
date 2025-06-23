@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,31 +31,54 @@ public class FireDispatchService {
     /**
      * 출동 정보 생성
      */
+    // FireDispatchService.java
     public FireDispatchDto createDispatch(FireDispatchDto dto) {
-        FireReportEntity fireReport = fireReportRepository.findByReportToken_Token(dto.getReportToken())
-            .orElseThrow(() -> new IllegalArgumentException("신고 정보가 존재하지 않습니다."));
 
-        FireStationEntity fireStation = fireStationRepository.findById(dto.getFireStationId())
-            .orElseThrow(() -> new IllegalArgumentException("소방서 정보가 존재하지 않습니다."));
+        FireReportEntity  fireReport  = fireReportRepository
+                .findByReportToken_Token(dto.getReportToken())
+                .orElseThrow(() -> new IllegalArgumentException("신고 정보가 존재하지 않습니다."));
 
-        FireDispatchEntity entity = FireDispatchEntity.builder()
-            .fireReport(fireReport)
-            .fireStation(fireStation)
-            // .status(dto.getStatus())
-            .status(FireReportStatus.RECEIVED)
-            .dispatchedAt(LocalDateTime.now())
-            .build();
+        FireStationEntity fireStation = fireStationRepository
+                .findById(dto.getFireStationId())
+                .orElseThrow(() -> new IllegalArgumentException("소방서 정보가 존재하지 않습니다."));
 
-        fireDispatchRepository.save(entity);
+        // 이미 진행 중인 출동이 있으면 그것을 그대로 사용
+        List<FireReportStatus> alive = List.of(
+                FireReportStatus.RECEIVED,
+                FireReportStatus.DISPATCHED,
+                FireReportStatus.ARRIVED,
+                FireReportStatus.INITIAL_SUPPRESSION,
+                FireReportStatus.OVERHAUL
+        );
+
+        Optional<FireDispatchEntity> dup =
+                fireDispatchRepository.findTopByFireReportAndFireStationAndStatusIn(
+                        fireReport, fireStation, alive);
+
+        FireDispatchEntity entity;
+        if (dup.isPresent()) {
+            entity = dup.get();  // 중복 생성 방지. 소방출동 URL을 2번 누를 경우 생기는 버그 방지 위함.
+        } else {
+            // 없으면 새로 생성
+            entity = FireDispatchEntity.builder()
+                    .fireReport(fireReport)
+                    .fireStation(fireStation)
+                    .status(FireReportStatus.RECEIVED)
+                    .dispatchedAt(LocalDateTime.now())
+                    .build();
+            fireDispatchRepository.save(entity);
+        }
+
 
         return FireDispatchDto.builder()
                 .id(entity.getId())
-                .reportId(fireReport.getId())
+                .reportId(entity.getFireReport().getId())
                 .reportToken(dto.getReportToken())
-                .fireStationId(dto.getFireStationId())
+                .fireStationId(entity.getFireStation().getId())
                 .status(entity.getStatus())
                 .build();
     }
+
 
     /**
      * 신고 토큰 기준 출동 리스트 조회

@@ -16,6 +16,7 @@ import {
 } from "react-icons/pi";
 import { HiLocationMarker } from "react-icons/hi";
 import { RxDashboard, RxPerson } from "react-icons/rx";
+import { Link } from "react-router-dom";
 
 const menuGroups = [
     {
@@ -79,7 +80,7 @@ export default function Sidebar({ isOpen }) {
         >
             <div className="flex items-center justify-center h-16 font-[900] text-[27px] font-suit text-[#3E7EFF] tracking-[-.09em]">
                 <HiLocationMarker />
-                {isOpen ? "JusoCraft" : ""}
+                {isOpen && <Link to="/">JusoCraft</Link>}
             </div>
             <nav className="flex-1 p-2 space-y-4 overflow-y-auto text-sm">
                 {menuGroups.map((group) => (

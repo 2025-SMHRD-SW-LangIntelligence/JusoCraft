@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { LiaToggleOffSolid, LiaToggleOnSolid } from "react-icons/lia";
+import { MdOutlineArrowDropDown } from "react-icons/md";
 
 function translateStatus(status) {
     if (!status) return "정보 없음";
-
     switch (status) {
         case "RECEIVED":
             return "신고 접수";
@@ -51,11 +51,20 @@ function getStatusBadgeColor(status) {
 
 export default function ReportTable({ reports, onSelect }) {
     const [showReportDetail, setShowReportDetail] = useState(false);
+    const [showAll, setShowAll] = useState(false);
+
+    // 최신순 정렬
+    const sortedReports = [...reports].sort(
+        (a, b) => new Date(b.reportedAt) - new Date(a.reportedAt)
+    );
+
+    // 최대 10개까지만 표시
+    const visibleReports = sortedReports.slice(0, showAll ? 10 : 5);
 
     useEffect(() => {
         console.log(
-            "📦 reports 상태값 확인",
-            reports.map((r) => [r.id, r.status])
+            "📦 최신순 정렬된 reports 확인",
+            sortedReports.map((r) => r.reportedAt)
         );
     }, [reports]);
 
@@ -68,8 +77,8 @@ export default function ReportTable({ reports, onSelect }) {
                 <button
                     onClick={() => setShowReportDetail((prev) => !prev)}
                     className="flex items-center gap-2 text-gray-600 hover:text-gray-650"
-                    aria-label="연락처 및 내용 보기 토글"
                     type="button"
+                    aria-label="연락처 및 내용 보기 토글"
                 >
                     <span className="text-sm select-none">
                         연락처 및 내용 보기
@@ -88,11 +97,7 @@ export default function ReportTable({ reports, onSelect }) {
                         <table className="min-w-full text-sm">
                             <thead className="border-b border-gray-100 bg-neutral-50">
                                 <tr>
-                                    <th className="px-6 py-4 text-center text-xs font-medium text-gray-500">
-                                        ID
-                                    </th>
-
-                                    {!showReportDetail && (
+                                    {!showReportDetail ? (
                                         <>
                                             <th className="px-6 py-4 text-center text-xs font-medium text-gray-500">
                                                 신고자 주소
@@ -101,9 +106,7 @@ export default function ReportTable({ reports, onSelect }) {
                                                 화재 주소
                                             </th>
                                         </>
-                                    )}
-
-                                    {showReportDetail && (
+                                    ) : (
                                         <>
                                             <th className="px-6 py-4 text-center text-xs font-medium text-gray-500">
                                                 신고자 연락처
@@ -113,7 +116,6 @@ export default function ReportTable({ reports, onSelect }) {
                                             </th>
                                         </>
                                     )}
-
                                     <th className="px-6 py-4 text-center text-xs font-medium text-gray-500">
                                         시간
                                     </th>
@@ -127,13 +129,9 @@ export default function ReportTable({ reports, onSelect }) {
                             </thead>
 
                             <tbody className="divide-y divide-gray-100">
-                                {reports.map((report) => (
+                                {visibleReports.map((report) => (
                                     <tr key={report.id}>
-                                        <td className="text-center px-6 py-4 text-gray-700">
-                                            {report.id}
-                                        </td>
-
-                                        {!showReportDetail && (
+                                        {!showReportDetail ? (
                                             <>
                                                 <td className="text-center px-6 py-4 text-gray-700">
                                                     {report.reporterAddress}
@@ -142,9 +140,7 @@ export default function ReportTable({ reports, onSelect }) {
                                                     {report.fireAddress}
                                                 </td>
                                             </>
-                                        )}
-
-                                        {showReportDetail && (
+                                        ) : (
                                             <>
                                                 <td className="text-center px-6 py-4 text-gray-700">
                                                     {report.reporterPhone ||
@@ -162,7 +158,6 @@ export default function ReportTable({ reports, onSelect }) {
                                                 report.reportedAt
                                             ).toLocaleString()}
                                         </td>
-
                                         <td className="text-center px-6 py-4">
                                             <span
                                                 className={`inline-flex items-center px-2.5 py-0.5 rounded-full font-medium text-xs ${getStatusBadgeColor(
@@ -172,7 +167,6 @@ export default function ReportTable({ reports, onSelect }) {
                                                 {translateStatus(report.status)}
                                             </span>
                                         </td>
-
                                         <td className="text-center px-6 py-4">
                                             <button
                                                 onClick={() => onSelect(report)}
@@ -186,6 +180,24 @@ export default function ReportTable({ reports, onSelect }) {
                             </tbody>
                         </table>
                     </div>
+
+                    {sortedReports.length > 5 && (
+                        <div className="flex justify-center bg-gray-100 border-t">
+                            <button
+                                onClick={() => setShowAll((prev) => !prev)}
+                                className="flex items-center justify-center w-full h-full text-gray-600 hover:text-gray-800"
+                                aria-label={showAll ? "간략히 보기" : "더 보기"}
+                                title={showAll ? "간략히 보기" : "더 보기"}
+                            >
+                                <MdOutlineArrowDropDown
+                                    size={20}
+                                    className={`transition-transform duration-100 ${
+                                        showAll ? "rotate-180" : ""
+                                    }`}
+                                />
+                            </button>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

@@ -142,12 +142,7 @@ function DashboardPage() {
                             reports
                                 .filter((r) => r.inputStatus === "REPORTED") // 위치 입력 완료된 건
                                 .filter(
-                                    (r) =>
-                                        ![
-                                            "FULLY_SUPPRESSED",
-                                            "WITHDRAWN",
-                                            "MONITORING",
-                                        ].includes(r.status)
+                                    (r) => !["WITHDRAWN"].includes(r.status)
                                 ) // 완료 상태 제외
                         }
                         onSelect={(report) => setSelectedReport(report)}

@@ -132,13 +132,24 @@ function DashboardPage() {
                 <div className="w-full xl:w-2/3 flex flex-col gap-6">
                     {/* 신고 테이블 */}
                     {/* <ReportTable
-                  reports={reports}
-                  onSelect={(report) => setSelectedReport(report)}
-               /> */}
-                    <ReportTable
                         reports={reports.filter(
                             (r) => r.inputStatus === "REPORTED"
                         )}
+                        onSelect={(report) => setSelectedReport(report)}
+                    /> */}
+                    <ReportTable
+                        reports={
+                            reports
+                                .filter((r) => r.inputStatus === "REPORTED") // 위치 입력 완료된 건
+                                .filter(
+                                    (r) =>
+                                        ![
+                                            "FULLY_SUPPRESSED",
+                                            "WITHDRAWN",
+                                            "MONITORING",
+                                        ].includes(r.status)
+                                ) // 완료 상태 제외
+                        }
                         onSelect={(report) => setSelectedReport(report)}
                     />
 

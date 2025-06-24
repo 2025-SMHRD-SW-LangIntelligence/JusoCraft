@@ -36,14 +36,14 @@ delete L.Icon.Default.prototype._getIconUrl;
 
 // 마커 색상
 const STATUS_COLOR_MAP = {
-    RECEIVED: "gray",
-    DISPATCHED: "blue",
-    ARRIVED: "indigo",
-    INITIAL_SUPPRESSION: "orange",
-    OVERHAUL: "yellow",
-    FULLY_SUPPRESSED: "green",
-    WITHDRAWN: "red",
-    MONITORING: "purple",
+    RECEIVED: "#dc2626",
+    DISPATCHED: "#ca8a04",
+    ARRIVED: "#e11d48",
+    INITIAL_SUPPRESSION: "#ea580c",
+    OVERHAUL: "#4f46e5",
+    FULLY_SUPPRESSED: "#16a34a",
+    WITHDRAWN: "#2563eb",
+    MONITORING: "#9333ea",
 };
 
 // 마커 아이콘 생성 함수

@@ -29,19 +29,19 @@ function translateStatus(status) {
 function getStatusBadgeColor(status) {
     switch (status) {
         case "RECEIVED":
-            return "bg-gray-100 text-gray-600";
+            return "bg-red-100 text-red-600";
         case "DISPATCHED":
-            return "bg-blue-100 text-blue-600";
+            return "bg-yellow-100 text-yellow-600";
         case "ARRIVED":
-            return "bg-indigo-100 text-indigo-600";
+            return "bg-rose-100 text-rose-600";
         case "INITIAL_SUPPRESSION":
             return "bg-orange-100 text-orange-600";
         case "OVERHAUL":
-            return "bg-yellow-100 text-yellow-600";
+            return "bg-indigo-100 text-indigo-600";
         case "FULLY_SUPPRESSED":
             return "bg-green-100 text-green-600";
         case "WITHDRAWN":
-            return "bg-red-100 text-red-600";
+            return "bg-blue-100 text-blue-600";
         case "MONITORING":
             return "bg-purple-100 text-purple-600";
         default:

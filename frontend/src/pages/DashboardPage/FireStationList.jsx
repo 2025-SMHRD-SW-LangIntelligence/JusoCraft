@@ -19,9 +19,11 @@ function translateStatus(status) {
         case "MONITORING":
             return "잔불 감시";
         default:
-            return "정보 없음";
+            return "신고 접수";
     }
 }
+
+const COMPLETED_STATUSES = ["WITHDRAWN"];
 
 export default function FireStationList({
     fireLat,
@@ -127,13 +129,39 @@ export default function FireStationList({
                                             )}
                                         </td>
                                         <td className="px-4 py-2 text-center">
-                                            <button
+                                            {/* <button
                                                 className={`px-3 py-1 text-sm rounded-md text-white ${
                                                     s.dispatchAvailable
                                                         ? "bg-green-500 hover:bg-green-600"
                                                         : "bg-gray-300 cursor-not-allowed"
                                                 }`}
                                                 disabled={!s.dispatchAvailable}
+                                                onClick={() =>
+                                                    onDispatch(
+                                                        reportToken,
+                                                        s.id
+                                                    )
+                                                }
+                                            >
+                                                출동 지시
+                                            </button> */}
+                                            <button
+                                                className={`px-3 py-1 text-sm rounded-md text-white ${
+                                                    s.status === null ||
+                                                    COMPLETED_STATUSES.includes(
+                                                        s.status
+                                                    )
+                                                        ? "bg-green-500 hover:bg-green-600"
+                                                        : "bg-gray-300 cursor-not-allowed"
+                                                }`}
+                                                disabled={
+                                                    !(
+                                                        s.status === null ||
+                                                        COMPLETED_STATUSES.includes(
+                                                            s.status
+                                                        )
+                                                    )
+                                                }
                                                 onClick={() =>
                                                     onDispatch(
                                                         reportToken,

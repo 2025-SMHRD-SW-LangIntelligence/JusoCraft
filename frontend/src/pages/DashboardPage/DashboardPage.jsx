@@ -78,15 +78,6 @@ function DashboardPage() {
             // 출동 URL과 소방서 ID를 함께 저장
             setDispatchInfo({ url, fireStationId });
 
-            // console.log(
-            //     "🚨 dispatchInfo.fireStationId:",
-            //     dispatchInfo?.fireStationId
-            // );
-            // console.log(
-            //     "🧩 fireStations:",
-            //     fireStations.map((s) => s.id)
-            // );
-
             console.log("🧩 fireStations 목록:");
             fireStations.forEach((s) => {
                 console.log(`- ID: ${s.id}, 이름: ${s.centerName}`);
@@ -131,12 +122,6 @@ function DashboardPage() {
             <div className="flex flex-col xl:flex-row gap-6">
                 <div className="w-full xl:w-2/3 flex flex-col gap-6">
                     {/* 신고 테이블 */}
-                    {/* <ReportTable
-                        reports={reports.filter(
-                            (r) => r.inputStatus === "REPORTED"
-                        )}
-                        onSelect={(report) => setSelectedReport(report)}
-                    /> */}
                     <ReportTable
                         reports={
                             reports

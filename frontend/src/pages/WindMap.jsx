@@ -168,7 +168,7 @@ const WindMap = () => {
             ? 0.05
             : Math.max(0.03, Math.min(0.5, speed * 0.02 * (index + 1)));
 
-          // 🔁 누적 중심 좌표 계산
+          // 누적 중심 좌표 계산
           const [nextLat, nextLon] = computeDestination(
             prevLat,
             prevLon,
@@ -183,7 +183,7 @@ const WindMap = () => {
             isRain,
           });
 
-          // 🔄 update for next step
+          // update for next step
           prevLat = nextLat;
           prevLon = nextLon;
 
@@ -195,7 +195,7 @@ const WindMap = () => {
           //         baseDistanceKm * (i + 1) * 0.5
           //     )
           // );
-          // 🔁 누적 위치 기준 화살표 계산
+          // 누적 위치 기준 화살표 계산
           const arrowPoints = Array.from({ length: 3 }, (_, i) =>
             computeDestination(
               nextLat, // 이전 중심 기준
@@ -241,7 +241,7 @@ const WindMap = () => {
 
   useEffect(() => {
     fetchData();
-    const interval = setInterval(fetchData, 60000);
+    const interval = setInterval(fetchData, 300000);
     return () => clearInterval(interval);
   }, []);
 

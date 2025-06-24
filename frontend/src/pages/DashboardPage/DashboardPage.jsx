@@ -124,7 +124,7 @@ function DashboardPage() {
             <StatsCards />
             <GenerateUrl
                 onUrlGenerated={(newUrlEntry) => {
-                    setUrls((prev) => [...prev, newUrlEntry]);
+                    setUrls((prev) => [newUrlEntry, ...prev]);
                 }}
             />
 

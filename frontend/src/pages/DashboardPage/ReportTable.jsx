@@ -3,7 +3,7 @@ import { LiaToggleOffSolid, LiaToggleOnSolid } from "react-icons/lia";
 import { MdOutlineArrowDropDown } from "react-icons/md";
 
 function translateStatus(status) {
-    if (!status) return "정보 없음";
+    if (!status) return "신고 접수";
     switch (status) {
         case "RECEIVED":
             return "신고 접수";
@@ -45,7 +45,7 @@ function getStatusBadgeColor(status) {
         case "MONITORING":
             return "bg-purple-100 text-purple-600";
         default:
-            return "bg-gray-100 text-gray-600";
+            return "bg-red-100 text-red-600";
     }
 }
 

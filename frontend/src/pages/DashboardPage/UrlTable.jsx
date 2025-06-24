@@ -4,13 +4,18 @@ import { MdOutlineArrowDropDown } from "react-icons/md";
 function UrlTable({ urls, reports }) {
     const [showAll, setShowAll] = useState(false);
 
-    // 최신순 정렬 (createdAt이나 reportId 기준으로 정렬)
-    const sortedUrls = [...urls].sort(
-        (a, b) => b.reportId - a.reportId // 혹은 b.createdAt - a.createdAt
-    );
+    // const sortedUrls = [...urls].sort((a, b) => b.reportId - a.reportId);// 최신순 정렬 (reportId 큰 순, 새 항목이 앞에 있다고 가정)
+    const sortedUrls = [...urls].sort((a, b) => {
+        // 1. reportId가 null이면 가장 위에 오도록 정렬
+        if (a.reportId === null && b.reportId !== null) return -1;
+        if (a.reportId !== null && b.reportId === null) return 1;
 
-    // 5개 또는 10개 제한
-    const visibleUrls = sortedUrls.slice(0, showAll ? 10 : 5);
+        // 2. 둘 다 null이거나 둘 다 숫자면, 숫자 기준 내림차순 정렬
+        return (b.reportId || 0) - (a.reportId || 0);
+    });
+
+    // 전체 보기 여부에 따라 slice
+    const visibleUrls = showAll ? sortedUrls : sortedUrls.slice(0, 5);
 
     return (
         <div className="rounded-2xl border border-gray-200 bg-white">
@@ -77,7 +82,6 @@ function UrlTable({ urls, reports }) {
                         </table>
                     </div>
 
-                    {/* 전체보기 토글 아이콘 */}
                     {sortedUrls.length > 5 && (
                         <div className="flex justify-center bg-gray-100 border-t">
                             <button

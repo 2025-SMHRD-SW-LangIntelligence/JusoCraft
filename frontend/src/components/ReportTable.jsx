@@ -13,6 +13,7 @@ export default function ReportTable({ data, onSelect }) {
             <tr>
                 <th className="p-2 border">신고&nbsp;ID</th>
                 <th className="p-2 border">신고 내용</th>
+                <th className="p-2 border">신고자 번호</th>
                 <th className="p-2 border">신고자 주소</th>
                 <th className="p-2 border">화재 주소</th>
                 <th className="p-2 border">신고 시각</th>
@@ -33,6 +34,7 @@ export default function ReportTable({ data, onSelect }) {
                     >
                         <td className="p-2 border text-center">{r.id}</td>
                         <td className="p-2 border">{r.reportContent}</td>
+                        <td className="p-2 border">{r.reporterPhone}</td>
                         <td className="p-2 border">{r.reporterAddress ?? "-"}</td>
                         <td className="p-2 border">{r.fireAddress ?? "-"}</td>
                         <td className="p-2 border">{fmt(r.reportedAt)}</td>

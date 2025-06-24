@@ -106,7 +106,7 @@ const ZoomToFire = ({ position }) => {
     const map = useMap();
     useEffect(() => {
         if (position) {
-            map.setView(position, 16, { animate: true });
+            map.setView(position, 20, { animate: true });
         }
     }, [position]);
     return null;
